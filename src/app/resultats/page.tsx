@@ -9,7 +9,7 @@ import IdealCandidateCard from '@/components/IdealCandidateCard';
 import StoryExportCard from '@/components/StoryExportCard';
 import { Share2, RefreshCw, AlertCircle, Home, Sparkles, Download, Heart, Coffee, ShieldCheck, Target, MessageCircle, Send } from 'lucide-react';
 import Link from 'next/link';
-import { toPng } from 'html-to-image';
+import { toPng, toBlob } from 'html-to-image';
 
 export default function ResultsPage() {
     const [results, setResults] = useState<MatchResult[]>([]);
@@ -66,34 +66,41 @@ export default function ResultsPage() {
 
         setExportingType(type);
         try {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const dataUrl = await toPng(ref.current, { cacheBust: true, width: 1080, height: 1920 });
+            // High quality blob generation
+            const blob = await toBlob(ref.current, {
+                cacheBust: true,
+                width: 1080,
+                height: 1920,
+                pixelRatio: 2 // Higher fidelity
+            });
 
-            // Check for Web Share API support for files
-            if (navigator.share) {
+            if (!blob) throw new Error("Génération de l'image échouée");
+
+            const fileName = `trouvetoncandidat-${type === 'REAL' ? 'mon-match' : 'mon-utopie'}.png`;
+            const file = new File([blob], fileName, { type: 'image/png' });
+
+            // Check for Web Share API support
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
-                    const response = await fetch(dataUrl);
-                    const blob = await response.blob();
-                    const file = new File([blob], `trouvetoncandidat-${type.toLowerCase()}.png`, { type: 'image/png' });
-
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'TrouveTonCandidat.fr',
-                            text: `Fini le vote "utile", j'ai trouvé mon vrai match pour 2027 ! 🗳️🇫🇷 Découvrez le vôtre sur TrouveTonCandidat.fr`,
-                        });
-                        return;
-                    }
+                    await navigator.share({
+                        files: [file],
+                        title: type === 'REAL' ? 'Mon Match Politique' : 'Mon Mix Politique',
+                        text: 'Découvre mon candidat idéal pour 2027 ! 🗳️🇫🇷',
+                    });
+                    return; // Success!
                 } catch (shareErr) {
-                    console.error('Share failed', shareErr);
+                    // Fallback to download if user cancels or share fails
+                    console.log('Share canceled or failed', shareErr);
                 }
             }
 
-            // Fallback to simple download if sharing not supported
+            // Fallback: Traditional download
+            const dataUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.download = `trouvetoncandidat-${type === 'REAL' ? 'mon-match' : 'mon-utopie'}.png`;
+            link.download = fileName;
             link.href = dataUrl;
             link.click();
+            URL.revokeObjectURL(dataUrl);
         } catch (err) {
             console.error('Export error:', err);
         } finally {
