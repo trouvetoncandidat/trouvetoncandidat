@@ -2,125 +2,114 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, ShieldCheck, Zap, Scale, Ban, MonitorOff, Github } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, Zap, Scale, Ban, MonitorOff, Github, Heart, Coffee } from 'lucide-react';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#FDFDFD] flex flex-col items-center overflow-x-hidden w-full">
-      {/* Top Banner Tricolore (République) */}
-      <div className="w-full h-2 flex fixed top-0 z-50">
-        <div className="flex-1 bg-[#000091]" />
-        <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#E1000F]" />
+      <div className="fixed top-0 left-0 w-full z-50">
+        {/* Top Banner Tricolore (République) */}
+        <div className="w-full h-2 flex">
+          <div className="flex-1 bg-[#000091]" />
+          <div className="flex-1 bg-white" />
+          <div className="flex-1 bg-[#E1000F]" />
+        </div>
+
+        {/* Support Banner Citoyen */}
+        <div className="w-full bg-[#5F7FFF] py-2 px-4 flex justify-center items-center gap-4 text-white text-[10px] md:text-xs font-bold shadow-md">
+          <div className="flex items-center gap-2">
+            <Heart size={14} className="fill-white" />
+            <span className="hidden xs:inline">Ce projet est 100% citoyen & indépendant.</span>
+            <span className="xs:hidden">Indépendant & Citoyen</span>
+          </div>
+          <a
+            href="https://buymeacoffee.com/trouvetoncandidat"
+            target="_blank"
+            className="bg-white text-[#5F7FFF] px-3 py-1 rounded-full hover:bg-white/90 transition-colors uppercase tracking-widest text-[9px] flex-shrink-0"
+          >
+            Soutenir ☕
+          </a>
+        </div>
       </div>
 
-      <header className="w-full max-w-6xl px-6 py-24 md:py-40 flex flex-col items-center text-center space-y-12 relative">
-        {/* Decorative Floating Elements */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute top-40 -right-20 w-80 h-80 bg-secondary/5 rounded-full blur-3xl"
-        />
+      {/* Spacer to push content below fixed header */}
+      <div className="h-16 md:h-12" />
 
+      <header className="w-full max-w-5xl px-6 py-6 md:py-12 flex flex-col items-center text-center space-y-6 md:space-y-8 relative">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-accent rounded-full text-[#000091] font-black text-xs uppercase tracking-[0.2em]"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="inline-flex items-center gap-2 px-3 py-1 bg-accent rounded-full text-[#000091] font-black text-[9px] md:text-xs uppercase tracking-[0.2em]"
         >
-          <Sparkles size={16} />
+          <Sparkles size={12} />
           <span>Boussole Électorale 2027</span>
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-[120px] font-black tracking-tighter leading-[0.9] text-[#1D1D1F] max-w-5xl"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl md:text-7xl font-black tracking-tighter leading-[1] text-[#1D1D1F] max-w-4xl"
         >
-          Votez pour un <span className="text-[#000091]">programme.</span> <br />
+          Votez pour un <span className="text-[#000091]">programme.</span> <br className="hidden md:block" />
           Pas pour un <span className="text-[#E1000F] italic">visage.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-xl md:text-3xl text-foreground/70 max-w-3xl font-medium leading-tight"
+          className="text-base md:text-xl text-foreground/70 max-w-2xl font-medium leading-tight md:leading-normal"
         >
-          100% impartial. Basé sur les engagements réels des candidats. <br />
-          <span className="text-foreground font-extrabold underline decoration-[#000091] decoration-4 underline-offset-4">Découvrez qui défend vraiment vos convictions pour 2027.</span>
+          100% impartial. Basé sur les engagements officiels des candidats. <br className="hidden md:block" />
+          <span className="text-foreground font-extrabold underline decoration-[#000091] decoration-2 underline-offset-4">Découvrez qui défend vraiment vos convictions.</span>
         </motion.p>
 
-        <div className="pt-8 space-y-6">
-          <Link href="/questionnaire" className="group relative inline-flex items-center">
-            {/* Pulsing Aura */}
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="absolute inset-0 bg-[#000091] rounded-full blur-2xl"
-            />
-
+        <div className="pt-2 flex flex-col items-center gap-6">
+          <Link href="/questionnaire">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative flex items-center justify-center text-center gap-4 px-8 md:px-12 py-6 md:py-8 bg-[#000091] text-white rounded-full font-black text-lg md:text-3xl shadow-2xl transition-all h-20 md:h-28"
+              className="relative flex items-center justify-center text-center px-10 md:px-14 py-4 md:py-5 bg-[#000091] text-white rounded-full font-black text-base md:text-xl shadow-xl transition-all"
             >
-              Trouver mon vrai match politique (3 min) 🚀
+              Lancer le test (3 min) 🚀
             </motion.div>
           </Link>
 
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-sm font-bold text-foreground/30 uppercase tracking-[0.2em]">Gratuit • Anonyme • Sans Pub</p>
-            <Link
-              href="https://github.com/votre-compte/trouvetoncandidat"
-              target="_blank"
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-border rounded-full hover:bg-gray-50 transition-colors shadow-sm"
-            >
-              <Github size={16} />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#1D1D1F]/60">Algorithme 100% Open Source</span>
+          <div className="flex items-center gap-6 text-[9px] font-bold text-foreground/30 uppercase tracking-[0.1em]">
+            <span>Gratuit • Anonyme • Sans Pub</span>
+            <Link href="https://github.com/trouvetoncandidat/trouvetoncandidat" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
+              <Github size={12} /> Source
             </Link>
           </div>
         </div>
       </header>
 
-      <section className="w-full max-w-6xl px-6 py-16 md:py-24 border-t border-border">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+      <section className="w-full max-w-5xl px-6 py-4 md:py-6 border-y border-border bg-white/30 backdrop-blur-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
           <ValueCard
-            icon={<Scale className="text-[#000091]" size={48} />}
-            title="Impartialité Totale"
-            description="Aucun algorithme biaisé, aucun parti pris. Seulement des mathématiques et des faits tirés des programmes officiels."
+            icon={<Scale size={20} className="text-[#000091]" />}
+            title="Impartialité"
+            description="Basé sur les faits."
           />
           <ValueCard
-            icon={<Ban className="text-[#E1000F]" size={48} />}
-            title="Fini le vote 'contre'"
-            description="Ne votez plus par dépit ou pour faire barrage. Retrouvez le goût de voter POUR des idées qui vous correspondent."
+            icon={<Ban size={20} className="text-[#E1000F]" />}
+            title="Utilité"
+            description="Votez pour des idées."
           />
           <ValueCard
-            icon={<MonitorOff className="text-foreground" size={48} />}
-            title="Le fond, pas la forme"
-            description="Oubliez les petites phrases, les clashs télévisés et le charisme. Ici, seuls les engagements concrets comptent."
+            icon={<MonitorOff size={20} className="text-foreground" />}
+            title="Fond & Forme"
+            description="Seul l'écrit compte."
           />
         </div>
       </section>
 
-      {/* Social Proof / Trust Footer */}
-      <footer className="w-full py-16 bg-gray-50 border-t border-border flex flex-col items-center gap-8 mt-auto">
-        <div className="flex flex-wrap justify-center gap-12 px-6">
-          <TrustPillar icon={<ShieldCheck size={20} />} text="Données 100% Locales" />
-          <TrustPillar icon={<Zap size={20} />} text="Analyse IA Neutre" />
-          <TrustPillar icon={<Sparkles size={20} />} text="Projet Citoyen" />
-        </div>
-        <div className="flex gap-8 text-xs font-black uppercase text-foreground/40 tracking-[0.3em]">
-          <Link href="/mentions-legales" className="hover:text-[#000091] transition-colors">Confidentialité</Link>
-          <Link href="/mentions-legales" className="hover:text-[#000091] transition-colors">Mentions Légales</Link>
-          <a href="#" className="hover:text-[#E1000F] transition-colors">Soutenir le projet</a>
-        </div>
-        <p className="text-[10px] font-bold text-foreground/20 uppercase tracking-[0.2em]">Fait avec rigueur par des citoyens pour la République française 🇫🇷</p>
+      <footer className="w-full py-8 mt-auto flex flex-col items-center gap-4 border-t border-border/50">
+        <Link href="/mentions-legales" className="text-[9px] font-black uppercase text-foreground/40 tracking-[0.2em] hover:text-primary transition-colors">
+          Mentions Légales
+        </Link>
+        <p className="text-[9px] font-bold text-foreground/20 uppercase tracking-[0.1em]">
+          🇫🇷 Fait par des citoyens pour la République
+        </p>
       </footer>
     </main>
   );
@@ -128,23 +117,20 @@ export default function Home() {
 
 function ValueCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="flex flex-col items-center text-center space-y-6 p-8"
-    >
-      <div className="p-6 bg-white rounded-3xl shadow-xl border border-border">{icon}</div>
-      <h3 className="text-3xl font-black tracking-tighter">{title}</h3>
-      <p className="text-foreground/60 font-medium text-lg leading-relaxed">{description}</p>
-    </motion.div>
+    <div className="flex items-center md:flex-col md:text-center gap-3 md:gap-2 px-4 py-2 md:py-3 transition-colors group">
+      <div className="p-2 bg-white rounded-xl border border-border group-hover:border-primary transition-colors">{icon}</div>
+      <div className="flex flex-col md:items-center">
+        <h3 className="text-[11px] md:text-sm font-black uppercase tracking-tight">{title}</h3>
+        <p className="text-foreground/50 font-medium text-[10px] md:text-xs leading-none">{description}</p>
+      </div>
+    </div>
   );
 }
 
 function TrustPillar({ icon, text }: { icon: React.ReactNode, text: string }) {
   return (
-    <div className="flex items-center gap-3 text-foreground/40 font-black text-xs uppercase tracking-widest">
-      <div className="text-foreground/20">{icon}</div>
+    <div className="flex items-center gap-2 text-foreground font-black text-[10px] uppercase tracking-widest">
+      <div className="opacity-50">{icon}</div>
       <span>{text}</span>
     </div>
   );
