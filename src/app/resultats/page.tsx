@@ -70,18 +70,22 @@ export default function ResultsPage() {
             const dataUrl = await toPng(ref.current, { cacheBust: true, width: 1080, height: 1920 });
 
             // Check for Web Share API support for files
-            if (navigator.canShare && navigator.share) {
-                const response = await fetch(dataUrl);
-                const blob = await response.blob();
-                const file = new File([blob], `trouvetoncandidat-${type.toLowerCase()}.png`, { type: 'image/png' });
+            if (navigator.share) {
+                try {
+                    const response = await fetch(dataUrl);
+                    const blob = await response.blob();
+                    const file = new File([blob], `trouvetoncandidat-${type.toLowerCase()}.png`, { type: 'image/png' });
 
-                if (navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'TrouveTonCandidat.fr',
-                        text: `Mon match politique pour 2027 ! 🇫🇷`,
-                    });
-                    return;
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'TrouveTonCandidat.fr',
+                            text: `Fini le vote "utile", j'ai trouvé mon vrai match pour 2027 ! 🗳️🇫🇷 Découvrez le vôtre sur TrouveTonCandidat.fr`,
+                        });
+                        return;
+                    }
+                } catch (shareErr) {
+                    console.error('Share failed', shareErr);
                 }
             }
 
@@ -110,7 +114,7 @@ export default function ResultsPage() {
     };
 
     const handleInviteFriend = async () => {
-        const text = "Ami(e) citoyen(ne), fais le test ! 🇫🇷 Pour qui voterais-tu vraiment si on ne regardait que le programme ? Découvre ton match politique sur :";
+        const text = "🗳️🇫🇷 Et toi, pour qui voterais-tu vraiment si on ne regardait que le programme ? J'ai découvert mon match politique sur TrouveTonCandidat.fr, c'est super bien fait et 100% anonyme. \n\nFais le test ici :";
         const url = 'https://trouvetoncandidat.fr';
 
         if (navigator.share) {
@@ -124,7 +128,7 @@ export default function ResultsPage() {
                 console.log('Sharing error', err);
             }
         } else {
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + '\n' + url)}`;
             window.open(whatsappUrl, '_blank');
         }
     };

@@ -1,23 +1,25 @@
 import fs from 'fs';
 import path from 'path';
-import pdf from 'pdf-parse';
+// Workaround for pdf-parse ESM import issues
+import pdf from 'pdf-parse/lib/pdf-parse.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { POLITICAL_AXES, PoliticalAxis } from '../lib/constants';
+import { POLITICAL_AXES, PoliticalAxis } from '../src/lib/constants';
 
 // For execution in Node environment
 // Needs GOOGLE_AI_API_KEY in environment
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
 
 async function extractTextFromPDF(pdfPath: string) {
-    const dataBuffer = fs.readFileSync(pdfPath);
-    const data = await pdf(dataBuffer);
-    return data.text;
+  const dataBuffer = fs.readFileSync(pdfPath);
+  // @ts-ignore - handled by the specific import
+  const data = await pdf(dataBuffer);
+  return data.text;
 }
 
 async function analyzeProgram(candidateName: string, text: string) {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `
+  const prompt = `
     Tu es Camille, experte en sciences politiques. Analyse le programme électoral de ${candidateName}.
     
     OBJECTIF : Extraire les propositions concrètes et les classer selon 10 axes thématiques.
@@ -51,40 +53,48 @@ async function analyzeProgram(candidateName: string, text: string) {
     ${text.substring(0, 30000)} // Limite pour Gemini Flash
   `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return JSON.parse(response.text().replace(/```json|```/g, ''));
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  return JSON.parse(response.text().replace(/```json|```/g, ''));
 }
 
 async function main() {
-    const programsDir = path.join(process.cwd(), 'data/programs');
-    const files = fs.readdirSync(programsDir).filter(f => f.endsWith('.pdf'));
+  const programsDir = path.join(process.cwd(), 'data/programs');
+  if (!fs.existsSync(programsDir)) {
+    console.error(`❌ Répertoire non trouvé : ${programsDir}`);
+    return;
+  }
+  const files = fs.readdirSync(programsDir).filter(f => f.endsWith('.pdf'));
 
-    console.log(`🚀 Analyse de ${files.length} programmes...`);
+  console.log(`🚀 Analyse de ${files.length} programmes...`);
 
-    const allCandidates = [];
+  const allCandidates = [];
 
-    for (const file of files) {
-        const candidateName = file.replace('.pdf', '');
-        console.log(`📄 Lecture de : ${candidateName}`);
+  for (const file of files) {
+    const candidateName = file.replace('.pdf', '');
+    console.log(`📄 Lecture de : ${candidateName}`);
 
-        const text = await extractTextFromPDF(path.join(programsDir, file));
-        const analysis = await analyzeProgram(candidateName, text);
+    const text = await extractTextFromPDF(path.join(programsDir, file));
+    const analysis = await analyzeProgram(candidateName, text);
 
-        allCandidates.push({
-            id: candidateName.toLowerCase().replace(/\s+/g, '-'),
-            name: candidateName,
-            propositions: analysis.propositions,
-            // On calculera le score moyen par axe plus tard
-        });
-    }
+    allCandidates.push({
+      id: candidateName.toLowerCase().replace(/\s+/g, '-'),
+      name: candidateName,
+      propositions: analysis.propositions,
+      // On calculera le score moyen par axe plus tard
+    });
+  }
 
-    fs.writeFileSync(
-        path.join(process.cwd(), 'data/candidates.json'),
-        JSON.stringify(allCandidates, null, 2)
-    );
+  fs.writeFileSync(
+    path.join(process.cwd(), 'data/candidates.json'),
+    JSON.stringify(allCandidates, null, 2)
+  );
 
-    console.log('✅ Ingestion terminée. Données enregistrées dans data/candidates.json');
+  console.log('✅ Ingestion terminée. Données enregistrées dans data/candidates.json');
 }
 
-// main().catch(console.error); // Commented out to avoid auto-run without API key
+// Pour exécuter : npx ts-node scripts/ingest.ts
+// @ts-ignore
+if (require.main === module) {
+  main().catch(console.error);
+}
