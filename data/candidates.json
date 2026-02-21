@@ -1,91 +1,290 @@
 [
     {
-        "id": "jean-test",
-        "name": "Jean Test",
-        "party": "Synthèse Radicale",
+        "id": "lfi",
+        "name": "La France Insoumise",
+        "party": "LFI",
         "propositions": [
             {
-                "content": "Suppression totale de l'Impôt sur la Fortune Immobilière (IFI) pour réinjecter le capital dans l'industrie.",
                 "axis": "économie",
-                "score": 1.0,
-                "justification": "Position libérale maximale visant la baisse massive de la fiscalité sur le capital.",
-                "source": "Page 4"
-            },
-            {
-                "content": "Dérégulation complète du marché du travail : suppression des 35 heures, retour à la négociation libre de gré à gré dans chaque entreprise.",
-                "axis": "économie",
-                "score": 1.0,
-                "justification": "Dérégulation totale du travail, pilier du libéralisme économique.",
-                "source": "Page 5"
-            },
-            {
-                "content": "Dotation de fusils d'assaut pour toutes les polices municipales de France et généralisation des drones de surveillance.",
-                "axis": "sécurité",
-                "score": 1.0,
-                "justification": "Renforcement massif des moyens répressifs et de surveillance technologique.",
-                "source": "Page 12"
-            },
-            {
-                "content": "Instauration de peines planchers obligatoires de 5 ans pour tout outrage à agent, sans aménagement possible.",
-                "axis": "sécurité",
-                "score": 1.0,
-                "justification": "Politique pénale de 'tolérance zéro' extrêmement répressive.",
-                "source": "Page 13"
-            },
-            {
-                "content": "Interdiction totale de la vente de véhicules thermiques et hybrides dès le 1er janvier 2028.",
-                "axis": "écologie",
+                "content": "Bloquer les prix, augmenter le SMIC à 1600€ net et interdire les super-dividendes.",
                 "score": -1.0,
-                "justification": "Mesure radicale de planification écologique par l'interdiction, typique de la décroissance forcée des énergies fossiles.",
-                "source": "Page 20"
+                "justification": "Position interventionniste forte pour le pouvoir d'achat.",
+                "source": "Avenir en Commun"
             },
             {
-                "content": "Nationalisation immédiate du secteur de l'énergie pour imposer une planification écologique stricte par l'État.",
+                "axis": "social",
+                "content": "Garantie d'autonomie à 1063€, retraite à 60 ans et réduction du temps de travail à 32h.",
+                "score": -1.0,
+                "justification": "Priorité au progrès social et à la redistribution.",
+                "source": "Avenir en Commun"
+            },
+            {
                 "axis": "écologie",
-                "score": -0.8,
-                "justification": "Interventionnisme d'État fort dans l'énergie au nom de l'écologie.",
-                "source": "Page 22"
+                "content": "Inscrire la règle verte dans la Constitution et investir 200 milliards dans la bifurcation écologique.",
+                "score": -1.0,
+                "justification": "Planification écologique radicale.",
+                "source": "Avenir en Commun"
             },
             {
-                "content": "Affirmation de la supériorité des lois françaises sur les traités européens.",
+                "axis": "société",
+                "content": "Libre changement de genre à l'état civil, constitutionnalisation de l'IVG et combat contre les discriminations.",
+                "score": -1.0,
+                "justification": "Progressisme sociétal maximal.",
+                "source": "Avenir en Commun"
+            }
+        ],
+        "scores": {
+            "économie": -1.0,
+            "social": -1.0,
+            "écologie": -1.0,
+            "énergie": -1.0,
+            "immigration": -1.0,
+            "sécurité": -1.0,
+            "institutions": -1.0,
+            "europe": -0.8,
+            "services publics": -1.0,
+            "international": -1.0,
+            "société": -1.0
+        }
+    },
+    {
+        "id": "rn",
+        "name": "Rassemblement National",
+        "party": "RN",
+        "propositions": [
+            {
+                "axis": "sécurité",
+                "content": "Rétablir les peines planchers, présomption de légitime défense, et atteindre 85 000 places de prison.",
+                "score": 1.0,
+                "justification": "Priorité absolue à la fermeté pénale.",
+                "source": "Programme RN"
+            },
+            {
+                "axis": "immigration",
+                "content": "Supprimer le droit du sol, fin du regroupement familial et traitement du droit d'asile à l'étranger.",
+                "score": 1.0,
+                "justification": "Souverainisme migratoire intégral.",
+                "source": "Programme RN"
+            },
+            {
+                "axis": "énergie",
+                "content": "Relancer la filière nucléaire, arrêter les projets éoliens et baisser la TVA sur l'énergie.",
+                "score": 0.8,
+                "justification": "Souveraineté énergétique par l'atome.",
+                "source": "Programme RN"
+            },
+            {
+                "axis": "société",
+                "content": "Interdiction du voile dans l'espace public et défense des valeurs traditionnelles.",
+                "score": 1.0,
+                "justification": "Ligne conservatrice identitaire.",
+                "source": "Programme RN"
+            }
+        ],
+        "scores": {
+            "économie": 0.5,
+            "social": 0.5,
+            "écologie": 0.8,
+            "énergie": 0.8,
+            "immigration": 1.0,
+            "sécurité": 1.0,
+            "institutions": 0.5,
+            "europe": 0.8,
+            "services publics": 0.5,
+            "international": 0.8,
+            "société": 1.0
+        }
+    },
+    {
+        "id": "renaissance",
+        "name": "Renaissance",
+        "party": "Majorité Présidentielle",
+        "propositions": [
+            {
+                "axis": "économie",
+                "content": "Baisse des impôts de production, plan d'innovation de 100 milliards et choc de productivité.",
+                "score": 0.8,
+                "justification": "Libéralisme de l'offre et compétitivité.",
+                "source": "Programme Renaissance"
+            },
+            {
                 "axis": "europe",
+                "content": "Buy European Act, marché de capitaux unifié et intégration européenne renforcée.",
                 "score": -1.0,
-                "justification": "Souverainisme juridique radical remettant en cause l'appartenance à l'UE.",
-                "source": "Page 30"
+                "justification": "Fédéralisme européen et souveraineté partagée.",
+                "source": "Programme Renaissance"
             },
             {
-                "content": "Sortie immédiate du commandement intégré de l'OTAN pour retrouver une autonomie stratégique totale.",
-                "axis": "international",
-                "score": -1.0,
-                "justification": "Isolationnisme militaire et rupture avec l'atlantisme.",
-                "source": "Page 32"
-            },
-            {
-                "content": "Maintien du montant actuel du SMIC, mais passage à une durée légale de travail de 40 heures payées 35.",
-                "axis": "social",
+                "axis": "énergie",
+                "content": "Construction de 14 EPR, développement de l'éolien marin et décarbonation industrielle.",
                 "score": 0.5,
-                "justification": "Mesure hybride : maintien de l'acquis (SMIC) mais réforme structurelle majeure sur le temps de travail (+1 sur le travail). Score pondéré vers les réformes.",
-                "source": "Page 38"
+                "justification": "Mix énergétique pro-climat et nucléaire.",
+                "source": "Programme Renaissance"
             },
             {
-                "content": "Création d'un Service National Civil de 6 mois obligatoire pour tous les jeunes de 18 ans.",
+                "axis": "société",
+                "content": "Soutien à la PMA, extension des droits LGBTQ+ et vision libérale des mœurs.",
+                "score": -0.8,
+                "justification": "Libéralisme culturel et sociétal.",
+                "source": "Programme Renaissance"
+            }
+        ],
+        "scores": {
+            "économie": 0.8,
+            "social": 0.5,
+            "écologie": -0.2,
+            "énergie": 0.5,
+            "immigration": 0.2,
+            "sécurité": 0.5,
+            "institutions": 0.8,
+            "europe": -1.0,
+            "services publics": 0.5,
+            "international": -0.8,
+            "société": -0.8
+        }
+    },
+    {
+        "id": "eelv",
+        "name": "Les Écologistes",
+        "party": "EELV",
+        "propositions": [
+            {
+                "axis": "écologie",
+                "content": "Réduction de 60% des émissions d'ici 2030, reconnaissance de l'écocide et fin du plastique jetable.",
+                "score": -1.0,
+                "justification": "Radicalité environnementale par la loi.",
+                "source": "Programme Écolo"
+            },
+            {
                 "axis": "social",
-                "score": 0.0,
-                "justification": "Mesure d'encadrement social neutre entre protection sociale et réforme libérale.",
-                "source": "Page 40"
+                "content": "Création d'un Revenu universel d'existence et 6ème semaine de congés payés.",
+                "score": -0.8,
+                "justification": "Transformation sociale par le temps libéré.",
+                "source": "Programme Écolo"
+            },
+            {
+                "axis": "international",
+                "content": "Multilatéralisme, sortie de la Françafrique et aide au développement massive.",
+                "score": -0.8,
+                "justification": "Diplomatie basée sur les droits humains.",
+                "source": "Programme Écolo"
+            },
+            {
+                "axis": "société",
+                "content": "Vote à 16 ans, transition de genre simplifiée et société inclusive.",
+                "score": -1.0,
+                "justification": "Progressisme sociétal radical.",
+                "source": "Programme Écolo"
+            }
+        ],
+        "scores": {
+            "économie": -0.8,
+            "social": -0.8,
+            "écologie": -1.0,
+            "énergie": -1.0,
+            "immigration": -0.8,
+            "sécurité": -0.8,
+            "institutions": -0.8,
+            "europe": -1.0,
+            "services publics": -0.8,
+            "international": -0.8,
+            "société": -1.0
+        }
+    },
+    {
+        "id": "lr",
+        "name": "Les Républicains",
+        "party": "LR",
+        "propositions": [
+            {
+                "axis": "économie",
+                "content": "Seuil 'zéro cotisation' sur les heures sup et baisse massive de la dépense publique.",
+                "score": 1.0,
+                "justification": "Libéralisme économique et rigueur budgétaire.",
+                "source": "Programme LR"
+            },
+            {
+                "axis": "immigration",
+                "content": "Aides sociales réservées aux Français et durcissement drastique de l'asile.",
+                "score": 0.8,
+                "justification": "Fermeté migratoire et identité nationale.",
+                "source": "Programme LR"
+            },
+            {
+                "axis": "sécurité",
+                "content": "Soutien aux forces de l'ordre, peines fermes et construction de prisons.",
+                "score": 0.8,
+                "justification": "Ligne régalienne classique.",
+                "source": "Programme LR"
+            },
+            {
+                "axis": "société",
+                "content": "Vision conservatrice de la famille et des institutions scolaires (uniforme).",
+                "score": 0.5,
+                "justification": "Conservatisme républicain modéré.",
+                "source": "Programme LR"
             }
         ],
         "scores": {
             "économie": 1.0,
-            "social": 0.25,
-            "écologie": -0.9,
-            "europe": -1.0,
+            "social": 0.8,
+            "écologie": 0.5,
+            "énergie": 0.8,
+            "immigration": 0.8,
+            "sécurité": 0.8,
+            "institutions": 0.8,
+            "europe": 0.2,
+            "services publics": 0.8,
+            "international": 0.5,
+            "société": 0.5
+        }
+    },
+    {
+        "id": "reconquete",
+        "name": "Reconquête",
+        "party": "Reconquête",
+        "propositions": [
+            {
+                "axis": "immigration",
+                "content": "Stopper les flux migratoires, supprimer le droit du sol et 'Ministère de la Remigration'.",
+                "score": 1.0,
+                "justification": "Défense civilisationnelle radicale.",
+                "source": "Programme Reconquête"
+            },
+            {
+                "axis": "économie",
+                "content": "Impôt société à 15% pour les PME et suppression des droits de succession.",
+                "score": 1.0,
+                "justification": "Libéralisme fiscal pour la transmission.",
+                "source": "Programme Reconquête"
+            },
+            {
+                "axis": "énergie",
+                "content": "Construire 14 réacteurs EPR2 et fin du démantèlement nucléaire.",
+                "score": 1.0,
+                "justification": "Nucléaire comme pilier de la France.",
+                "source": "Programme Reconquête"
+            },
+            {
+                "axis": "société",
+                "content": "Abrogation de la PMA pour les femmes seules, interdiction du voile et défense de la famille traditionnelle.",
+                "score": 1.0,
+                "justification": "Conservatisme radical.",
+                "source": "Programme Reconquête"
+            }
+        ],
+        "scores": {
+            "économie": 1.0,
+            "social": 1.0,
+            "écologie": 1.0,
+            "énergie": 1.0,
+            "immigration": 1.0,
             "sécurité": 1.0,
-            "immigration": 0.0,
-            "services publics": -0.4,
-            "énergie": -0.8,
-            "institutions": -0.5,
-            "international": -1.0
+            "institutions": 1.0,
+            "europe": 1.0,
+            "services publics": 0.8,
+            "international": 1.0,
+            "société": 1.0
         }
     }
 ]
