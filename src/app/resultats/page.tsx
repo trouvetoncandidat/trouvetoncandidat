@@ -3,23 +3,29 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { calculateMatches, generateIdealCandidate, getPoliticalProfile, MatchResult, IdealMeasure } from '@/lib/matchAlgorithm';
-import { PoliticalAxis } from '@/lib/constants';
+import { PoliticalAxis, WeightedScore } from '@/lib/constants';
 import CandidateCard from '@/components/CandidateCard';
 import IdealCandidateCard from '@/components/IdealCandidateCard';
 import StoryExportCard from '@/components/StoryExportCard';
-import { Share2, RefreshCw, AlertCircle, Home, Sparkles, Download, Heart, Coffee, ShieldCheck, Target, MessageCircle, Send } from 'lucide-react';
+import { Share2, RefreshCw, AlertCircle, Home, Sparkles, Download, Heart, Coffee, ShieldCheck, Target, MessageCircle, Send, BarChart3, Fingerprint, Award } from 'lucide-react';
+import RadarChart from '@/components/RadarChart';
 import Link from 'next/link';
-import { toPng, toBlob } from 'html-to-image';
+import { toBlob } from 'html-to-image';
 
 export default function ResultsPage() {
     const [results, setResults] = useState<MatchResult[]>([]);
     const [idealMeasures, setIdealMeasures] = useState<IdealMeasure[]>([]);
     const [profileBadge, setProfileBadge] = useState({ title: "Citoyen", subtitle: "En quête de repères" });
     const [loading, setLoading] = useState(true);
-    const [exportingType, setExportingType] = useState<'REAL' | 'IDEAL' | null>(null);
+    const [exportingType, setExportingType] = useState<'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL' | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const storyRealRef = useRef<HTMLDivElement>(null);
-    const storyIdealRef = useRef<HTMLDivElement>(null);
+    const [userScores, setUserScores] = useState<Record<string, WeightedScore>>({});
+
+    // 4 Refs for 4 different exports
+    const refIdentity = useRef<HTMLDivElement>(null);
+    const refMatch = useRef<HTMLDivElement>(null);
+    const refRadar = useRef<HTMLDivElement>(null);
+    const refIdeal = useRef<HTMLDivElement>(null);
 
     const [showTheatricalLoading, setShowTheatricalLoading] = useState(true);
     const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
@@ -28,15 +34,11 @@ export default function ResultsPage() {
         "Analyse de vos réponses...",
         "Calcul des affinités sur les 10 axes thématiques...",
         "Comparaison avec 1200 pages de programmes officiels...",
-        "Filtrage des propositions concrètes...",
-        "Élimination des éléments de langage marketing...",
-        "Mesure de compatibilité en cours...",
         "Génération de votre profil citoyen...",
         "Finalisation de votre match idéal..."
     ];
 
     useEffect(() => {
-        // Message rotation logic
         const messageInterval = setInterval(() => {
             setLoadingMessageIndex(prev => (prev + 1) % loadingMessages.length);
         }, 800);
@@ -51,45 +53,43 @@ export default function ResultsPage() {
                     return;
                 }
 
-                const userScores = JSON.parse(storedScores) as Record<PoliticalAxis, number>;
+                const rawScores = JSON.parse(storedScores);
+                const uScores: Record<string, WeightedScore> = {};
+                Object.entries(rawScores).forEach(([axis, val]) => {
+                    uScores[axis] = typeof val === 'number' ? { score: val, weight: 1 } : val as WeightedScore;
+                });
+                setUserScores(uScores);
 
                 const response = await fetch('/candidates.json');
-                if (!response.ok) {
-                    throw new Error("Impossible de charger les données des candidats.");
-                }
-
                 const candidates = await response.json();
 
-                const matches = calculateMatches(userScores, candidates);
+                const matches = calculateMatches(uScores as Record<PoliticalAxis, WeightedScore>, candidates);
                 setResults(matches);
 
-                const ideal = generateIdealCandidate(userScores, candidates);
+                const ideal = generateIdealCandidate(uScores as Record<PoliticalAxis, WeightedScore>, candidates);
                 setIdealMeasures(ideal);
 
-                const badge = getPoliticalProfile(userScores);
+                const badge = getPoliticalProfile(uScores as Record<PoliticalAxis, WeightedScore>);
                 setProfileBadge(badge);
 
-                // Artificial delay for theatrical effect
                 setTimeout(() => {
                     setShowTheatricalLoading(false);
                     setLoading(false);
-                }, 3500);
+                }, 3000);
 
             } catch (err) {
-                console.error(err);
-                setError("Une erreur est survenue lors du calcul des résultats.");
+                setError("Une erreur est survenue lors du calcul.");
                 setLoading(false);
                 setShowTheatricalLoading(false);
             }
         }
-
         loadAndCalculate();
-
         return () => clearInterval(messageInterval);
     }, []);
 
-    const handleShareImage = async (type: 'REAL' | 'IDEAL') => {
-        const ref = type === 'REAL' ? storyRealRef : storyIdealRef;
+    const handleShareImage = async (type: 'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL') => {
+        const refsMap = { IDENTITY: refIdentity, MATCH: refMatch, RADAR: refRadar, IDEAL: refIdeal };
+        const ref = refsMap[type];
         if (!ref.current) return;
 
         setExportingType(type);
@@ -101,30 +101,26 @@ export default function ResultsPage() {
                 pixelRatio: 2
             });
 
-            if (!blob) throw new Error("Génération de l'image échouée");
+            if (!blob) throw new Error("Génération échouée");
 
-            const fileName = `trouvetoncandidat-${type === 'REAL' ? 'mon-match' : 'mon-utopie'}.png`;
+            const titlesMap = { IDENTITY: 'Identité', MATCH: 'Match', RADAR: 'ADN', IDEAL: 'Utopie' };
+            const fileName = `trouvetoncandidat-${type.toLowerCase()}.png`;
             const file = new File([blob], fileName, { type: 'image/png' });
 
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({
-                        files: [file],
-                        title: type === 'REAL' ? 'Mon Match Politique' : 'Mon Mix Politique',
-                        text: 'Découvre mon candidat idéal pour 2027 ! 🗳️🇫🇷',
-                    });
-                    return;
-                } catch (shareErr) {
-                    // Share canceled or failed
-                }
+                await navigator.share({
+                    files: [file],
+                    title: `TrouveTonCandidat - ${titlesMap[type]}`,
+                    text: 'Découvrez mon profil politique pour 2027 ! 🗳️🇫🇷',
+                });
+            } else {
+                const dataUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = dataUrl;
+                link.click();
+                URL.revokeObjectURL(dataUrl);
             }
-
-            const dataUrl = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = fileName;
-            link.href = dataUrl;
-            link.click();
-            URL.revokeObjectURL(dataUrl);
         } catch (err) {
             console.error('Export error:', err);
         } finally {
@@ -133,22 +129,12 @@ export default function ResultsPage() {
     };
 
     const handleInviteFriend = async () => {
-        const text = "🗳️🇫🇷 Et toi, pour qui voterais-tu vraiment si on ne regardait que le programme ? J'ai découvert mon match politique sur TrouveTonCandidat.fr, c'est super bien fait et 100% anonyme. \n\nFais le test ici :";
+        const text = "🗳️🇫🇷 Découvre ton match politique sur TrouveTonCandidat.fr ! C'est neutre, gratuit et anonyme.";
         const url = 'https://trouvetoncandidat.fr';
-
         if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'TrouveTonCandidat.fr',
-                    text: text,
-                    url: url,
-                });
-            } catch (err) {
-                // Sharing error
-            }
+            await navigator.share({ title: 'TrouveTonCandidat.fr', text: text, url: url });
         } else {
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + '\n' + url)}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
         }
     };
 
@@ -157,236 +143,130 @@ export default function ResultsPage() {
             {showTheatricalLoading ? (
                 <motion.div
                     key="loader"
-                    initial={{ opacity: 1 }}
                     exit={{ opacity: 0, scale: 1.05 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
                     className="min-h-screen bg-white fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 space-y-12 overflow-hidden w-full"
                 >
-                    {/* Premium Background Ambient */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent pointer-events-none" />
-                    {/* Pulsing Tricolor Ring */}
                     <div className="relative flex items-center justify-center">
                         <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                             className="w-32 h-32 md:w-48 md:h-48 rounded-full border-8 border-transparent border-t-[#000091] border-r-white border-b-[#E1000F] shadow-2xl"
                         />
-                        <motion.div
-                            animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="absolute font-black text-xl md:text-3xl tracking-tighter text-[#1D1D1F]"
-                        >
-                            <Sparkles size={40} className="text-secondary animate-pulse" />
-                        </motion.div>
+                        <div className="absolute"><Sparkles size={40} className="text-secondary animate-pulse" /></div>
                     </div>
-
                     <div className="flex flex-col items-center gap-6 max-w-sm w-full text-center">
                         <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <motion.div
-                                initial={{ width: "0%" }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 3.5, ease: "easeInOut" }}
-                                className="h-full bg-primary"
-                            />
+                            <motion.div initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 3 }} className="h-full bg-primary" />
                         </div>
-
-                        <div className="h-12 flex flex-col items-center justify-center">
-                            <AnimatePresence mode="wait">
-                                <motion.p
-                                    key={loadingMessageIndex}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    className="text-sm md:text-base font-black uppercase tracking-widest text-[#1D1D1F]/60 px-4"
-                                >
-                                    {loadingMessages[loadingMessageIndex]}
-                                </motion.p>
-                            </AnimatePresence>
-                        </div>
+                        <p className="text-sm font-black uppercase tracking-widest text-[#1D1D1F]/60">
+                            {loadingMessages[loadingMessageIndex]}
+                        </p>
                     </div>
-
-                    <p className="fixed bottom-12 text-[10px] font-black uppercase tracking-[0.3em] text-foreground/20 animate-pulse">
-                        Calcul Intelligent • 100% Neutre
-                    </p>
                 </motion.div>
             ) : error ? (
-                <motion.div
-                    key="error"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="min-h-screen flex flex-col items-center justify-center p-6 space-y-6"
-                >
+                <div className="min-h-screen flex flex-col items-center justify-center p-6 space-y-6">
                     <AlertCircle className="text-secondary" size={64} />
                     <h2 className="text-2xl font-black">{error}</h2>
-                    <Link href="/" className="px-8 py-4 bg-primary text-white rounded-full font-bold">Retour à l'accueil</Link>
-                </motion.div>
+                    <Link href="/" className="px-8 py-4 bg-primary text-white rounded-full font-bold">Retour</Link>
+                </div>
             ) : (
                 <motion.main
-                    key="results"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                    className="min-h-screen bg-white pb-32 overflow-x-hidden w-full"
+                    className="min-h-screen bg-[#F8F9FA] pb-32 w-full"
                 >
-                    {/* Hidden Story Cards for Export */}
+                    {/* HIDDEN STORY CARDS FOR 4 TYPES OF EXPORTS */}
                     <div className="fixed left-[-9999px] top-0 pointer-events-none">
-                        <div ref={storyRealRef}>
-                            <StoryExportCard
-                                type="REAL"
-                                measures={idealMeasures}
-                                topMatchName={results[0]?.candidate.name || ""}
-                                topMatchPercent={results[0]?.globalMatch || 0}
-                                profileBadge={profileBadge}
-                            />
-                        </div>
-                        <div ref={storyIdealRef}>
-                            <StoryExportCard
-                                type="IDEAL"
-                                measures={idealMeasures}
-                                topMatchName={results[0]?.candidate.name || ""}
-                                topMatchPercent={results[0]?.globalMatch || 0}
-                                profileBadge={profileBadge}
-                            />
+                        <div ref={refIdentity}><StoryExportCard type="IDENTITY" profileBadge={profileBadge} userScores={userScores} /></div>
+                        <div ref={refMatch}><StoryExportCard type="MATCH" topMatchName={results[0]?.candidate.name} topMatchPercent={results[0]?.globalMatch} profileBadge={profileBadge} userScores={userScores} /></div>
+                        <div ref={refRadar}><StoryExportCard type="RADAR" topMatchName={results[0]?.candidate.name} userScores={userScores} candidateScores={results[0]?.candidate.scores} profileBadge={profileBadge} /></div>
+                        <div ref={refIdeal}><StoryExportCard type="IDEAL" measures={idealMeasures} userScores={userScores} profileBadge={profileBadge} /></div>
+                    </div>
+
+                    {/* TOP NAVIGATION / HEADER */}
+                    <div className="fixed top-0 left-0 w-full z-50">
+                        <div className="w-full h-1.5 flex"><div className="flex-1 bg-[#000091]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#E1000F]" /></div>
+                        <div className="w-full bg-white/80 backdrop-blur-md py-3 px-6 flex justify-between items-center shadow-sm">
+                            <div className="flex items-center gap-2 text-primary">
+                                <Fingerprint size={20} />
+                                <span className="font-black text-sm uppercase tracking-tighter">TrouveTonCandidat.fr</span>
+                            </div>
+                            <button onClick={handleInviteFriend} className="text-[10px] font-black uppercase tracking-widest text-primary/60 border border-primary/20 px-3 py-1 rounded-full flex items-center gap-2">
+                                <Heart size={10} className="fill-primary/20" /> Inviter un ami
+                            </button>
                         </div>
                     </div>
 
-                    <div className="fixed top-0 left-0 w-full z-50">
-                        {/* Top Banner Tricolore (République) */}
-                        <div className="w-full h-2 flex">
-                            <div className="flex-1 bg-[#000091]" />
-                            <div className="flex-1 bg-white" />
-                            <div className="flex-1 bg-[#E1000F]" />
-                        </div>
+                    <div className="max-w-xl mx-auto px-6 pt-24 space-y-6">
 
-                        {/* Support Banner Citoyen */}
-                        <div className="w-full bg-[#5F7FFF] py-2 px-4 flex justify-center items-center gap-4 text-white text-[10px] md:text-xs font-bold shadow-md">
-                            <div className="flex items-center gap-2">
-                                <Heart size={14} className="fill-white" />
-                                <span className="hidden xs:inline">Ce projet est 100% citoyen & indépendant.</span>
-                                <span className="xs:hidden">Indépendant & Citoyen</span>
+                        {/* SECTION 1: IDENTITY */}
+                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 01 • Identité</h2>
+                                <button onClick={() => handleShareImage('IDENTITY')} className="p-2 text-primary/40 hover:text-primary transition-colors">
+                                    {exportingType === 'IDENTITY' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
+                                </button>
                             </div>
-                            <a
-                                href="https://buymeacoffee.com/trouvetoncandidat"
-                                target="_blank"
-                                className="bg-white text-[#5F7FFF] px-3 py-1 rounded-full hover:bg-white/90 transition-colors uppercase tracking-widest text-[9px] flex-shrink-0"
-                            >
-                                Soutenir ☕
+                            <div className="text-center space-y-2">
+                                <div className="inline-flex items-center justify-center p-4 bg-primary/5 rounded-full mb-2">
+                                    <Award className="text-primary" size={32} />
+                                </div>
+                                <h3 className="text-4xl font-black tracking-tighter">{profileBadge.title}</h3>
+                                <p className="text-sm font-medium text-foreground/50 leading-tight">{profileBadge.subtitle}</p>
+                            </div>
+                        </section>
+
+                        {/* SECTION 2: TOP MATCH */}
+                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 02 • Votre Match</h2>
+                                <button onClick={() => handleShareImage('MATCH')} className="p-2 text-primary/40 hover:text-primary transition-colors">
+                                    {exportingType === 'MATCH' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
+                                </button>
+                            </div>
+                            {results[0] && <CandidateCard result={results[0]} rank={1} />}
+                        </section>
+
+                        {/* SECTION 3: ANALYSE RADAR */}
+                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 03 • Analyse ADN</h2>
+                                <button onClick={() => handleShareImage('RADAR')} className="p-2 text-primary/40 hover:text-primary transition-colors">
+                                    {exportingType === 'RADAR' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
+                                </button>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="h-[300px] w-full">
+                                    <RadarChart userScores={userScores} candidateScores={results[0]?.candidate.scores || {}} />
+                                </div>
+                                <div className="flex justify-center gap-6">
+                                    <div className="flex items-center gap-2"><div className="w-2 h-2 bg-[#000091] rounded-full" /><span className="text-[9px] font-black uppercase text-primary/40">Vous</span></div>
+                                    <div className="flex items-center gap-2"><div className="w-2 h-2 bg-[#E1000F] border border-dashed border-[#E1000F] rounded-full" /><span className="text-[9px] font-black uppercase text-secondary/40">{results[0]?.candidate.name}</span></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* SECTION 4: MON UTOPIE */}
+                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
+                            <div className="flex justify-between items-center">
+                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 04 • Mon Utopie</h2>
+                                <button onClick={() => handleShareImage('IDEAL')} className="p-2 text-primary/40 hover:text-primary transition-colors">
+                                    {exportingType === 'IDEAL' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
+                                </button>
+                            </div>
+                            {idealMeasures.length > 0 && <IdealCandidateCard measures={idealMeasures} />}
+                        </section>
+
+                        {/* FINAL ACTIONS */}
+                        <div className="pt-8 space-y-4">
+                            <Link href="/" className="w-full h-16 bg-white border-2 border-border rounded-2xl flex items-center justify-center gap-3 font-black text-foreground/40 active:scale-95 transition-all">
+                                <Home size={20} /> Recommencer le test
+                            </Link>
+                            <a href="https://buymeacoffee.com/trouvetoncandidat" target="_blank" className="w-full h-16 bg-[#FFDD00] rounded-2xl flex items-center justify-center gap-3 font-black text-[#1D1D1F] active:scale-95 transition-all shadow-md">
+                                <Coffee size={20} /> Soutenir avec un café
                             </a>
                         </div>
-                    </div>
 
-                    {/* Spacer to push content below fixed header */}
-                    <div className="h-16 md:h-12" />
-
-                    <div className="max-w-4xl mx-auto px-6 pt-16 space-y-16 relative z-10">
-                        <header className="space-y-8 text-center pb-12">
-
-                            <div className="flex flex-col items-center gap-4">
-                                <p className="text-xs font-black uppercase tracking-[0.3em] text-foreground/30">Votre Identité Politique</p>
-                                <motion.div
-                                    initial={{ scale: 0.9, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    className="p-8 bg-accent border-2 border-primary rounded-[2.5rem] shadow-xl inline-block text-center relative overflow-hidden"
-                                >
-                                    <div className="absolute top-0 right-0 p-4 text-primary/5 -mr-4 -mt-4">
-                                        <ShieldCheck size={120} />
-                                    </div>
-                                    <h3 className="text-4xl md:text-5xl font-black tracking-tighter relative z-10">{profileBadge.title}</h3>
-                                    <p className="text-lg font-medium text-foreground/60 relative z-10">{profileBadge.subtitle}</p>
-                                </motion.div>
-                            </div>
-                        </header>
-
-                        <section className="space-y-8">
-                            <div className="text-center space-y-2">
-                                <h2 className="text-sm font-black text-primary uppercase tracking-[0.4em]">Le Match Principal</h2>
-                                <h3 className="text-3xl font-black tracking-tighter">Votre candidat idéal pour 2027</h3>
-                            </div>
-
-                            {results.length > 0 && (
-                                <div className="space-y-6">
-                                    <CandidateCard result={results[0]} rank={1} />
-                                    <button
-                                        onClick={() => handleShareImage('REAL')}
-                                        disabled={!!exportingType}
-                                        className="w-full max-w-sm mx-auto flex items-center justify-center gap-4 px-8 h-16 bg-[#000091] text-white rounded-2xl font-black text-lg transition-all active:scale-95 shadow-lg group animate-pulse-subtle"
-                                    >
-                                        {exportingType === 'REAL' ? <RefreshCw className="animate-spin" size={20} /> : <Share2 size={20} />}
-                                        Partager mon Match
-                                    </button>
-                                </div>
-                            )}
-                        </section>
-
-                        <section className="p-8 md:p-12 bg-[#5F7FFF]/5 rounded-[2.5rem] border-2 border-[#5F7FFF]/20 space-y-6 text-center">
-                            <div className="space-y-2">
-                                <h2 className="text-2xl font-black tracking-tighter">Pas de pub. Pas de biais. <span className="text-[#5F7FFF]">Juste vous.</span></h2>
-                                <p className="text-base text-foreground/60 max-w-md mx-auto font-medium leading-tight">
-                                    Aidez-nous à rester 100% indépendant en offrant un café à l'équipe.
-                                </p>
-                            </div>
-
-                            <div className="flex justify-center">
-                                <a href="https://buymeacoffee.com/trouvetoncandidat" target="_blank" className="flex items-center justify-center gap-3 px-8 h-14 bg-white border-2 border-[#5F7FFF] text-[#5F7FFF] rounded-2xl font-black text-lg hover:bg-[#5F7FFF] hover:text-white transition-all active:scale-95 shadow-sm">
-                                    <Coffee size={22} /> Offrir un café (BMC)
-                                </a>
-                            </div>
-                        </section>
-
-                        {idealMeasures.length > 0 && (
-                            <section className="space-y-8 pt-12 border-t border-border">
-                                <div className="text-center space-y-2">
-                                    <h2 className="text-sm font-black text-secondary uppercase tracking-[0.4em]">Mon Utopie</h2>
-                                    <h3 className="text-3xl font-black tracking-tighter">Mon programme sur-mesure</h3>
-                                    <p className="text-foreground/50 text-sm">Le mix parfait de toutes les propositions qui vous correspondent.</p>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <IdealCandidateCard measures={idealMeasures} />
-                                    <button
-                                        onClick={() => handleShareImage('IDEAL')}
-                                        disabled={!!exportingType}
-                                        className="w-full max-w-sm mx-auto flex items-center justify-center gap-4 px-8 h-16 bg-[#E1000F] text-white rounded-2xl font-black text-lg transition-all active:scale-95 shadow-lg group"
-                                    >
-                                        {exportingType === 'IDEAL' ? <RefreshCw className="animate-spin" size={20} /> : <Sparkles size={20} />}
-                                        Partager mon Programme
-                                    </button>
-                                </div>
-                            </section>
-                        )}
-
-                        <section className="pt-12 border-t border-border">
-                            <div className="max-w-sm mx-auto space-y-4">
-                                <button
-                                    onClick={handleInviteFriend}
-                                    className="w-full flex items-center justify-center gap-3 px-8 h-16 bg-white border-2 border-primary text-primary rounded-2xl font-black text-lg transition-all active:scale-95 hover:bg-primary/5"
-                                >
-                                    <Heart size={20} />
-                                    Inviter un proche à faire le test
-                                </button>
-                                <p className="text-[10px] text-center text-foreground/30 font-bold uppercase tracking-widest leading-relaxed">
-                                    Aidez vos amis à sortir du vote "contre" <br /> et à découvrir leurs vraies convictions.
-                                </p>
-                            </div>
-                        </section>
-
-
-                        <section className="pt-12 flex justify-center pb-safe">
-                            <Link href="/" className="flex items-center justify-center gap-3 px-10 h-16 border-2 border-border text-foreground/50 font-black text-lg rounded-2xl hover:border-foreground hover:text-foreground transition-all active:scale-95">
-                                <Home size={20} /> Recommencer
-                            </Link>
-                        </section>
-
-                        <footer className="pt-12">
-                            <div className="p-8 bg-white border border-border rounded-2xl flex flex-col items-center gap-4">
-                                <Link href="/mentions-legales" className="text-[10px] font-black uppercase text-foreground/20 hover:text-primary transition-colors tracking-widest">
-                                    Mentions Légales
-                                </Link>
-                                <p className="text-[10px] text-foreground/30 font-bold uppercase tracking-[0.2em] leading-relaxed text-center">
-                                    🇫🇷 Fait par des citoyens pour la République
-                                </p>
-                            </div>
-                        </footer>
                     </div>
                 </motion.main>
             )}

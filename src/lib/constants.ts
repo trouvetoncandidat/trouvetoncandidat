@@ -13,6 +13,11 @@ export const POLITICAL_AXES = {
 
 export type PoliticalAxis = typeof POLITICAL_AXES[keyof typeof POLITICAL_AXES];
 
+export interface WeightedScore {
+    score: number;
+    weight: number;
+}
+
 export interface Proposition {
     content: string;
     axis: PoliticalAxis;

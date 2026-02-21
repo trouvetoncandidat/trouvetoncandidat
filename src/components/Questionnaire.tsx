@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PoliticalAxis, Question } from '@/lib/constants';
+import { PoliticalAxis, Question, WeightedScore } from '@/lib/constants';
 import { ChevronLeft, CheckCircle2 } from 'lucide-react';
 import questionsData from '../../data/questions.json';
 
 const ALL_QUESTIONS = questionsData as Question[];
 
 interface QuestionnaireProps {
-    onComplete: (scores: Record<PoliticalAxis, number>) => void;
+    onComplete: (scores: Record<PoliticalAxis, WeightedScore>) => void;
 }
 
 const CHOICE_VALUES = [
@@ -52,6 +52,7 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
         } else {
             // Questionnaire finished
             const aggregated: Record<string, number> = {};
+            const weightsAggregated: Record<string, number> = {};
             const counts: Record<string, number> = {};
 
             Object.entries(newAnswers).forEach(([qId, val]) => {
@@ -60,13 +61,27 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                     const actualValue = questionData.reversed ? -val : val;
                     const axis = questionData.axis;
                     aggregated[axis] = (aggregated[axis] || 0) + actualValue;
+
+                    // NEW WEIGHT LOGIC (Detection d'intensité)
+                    let weight = 0.5;
+                    const absVal = Math.abs(val);
+                    if (absVal === 1) weight = 2;
+                    else if (absVal === 0.5) weight = 1;
+
+                    weightsAggregated[axis] = (weightsAggregated[axis] || 0) + weight;
                     counts[axis] = (counts[axis] || 0) + 1;
                 }
             });
 
             const finalScores = Object.fromEntries(
-                Object.entries(aggregated).map(([axis, sum]) => [axis, sum / counts[axis]])
-            ) as Record<PoliticalAxis, number>;
+                Object.entries(aggregated).map(([axis, sum]) => [
+                    axis,
+                    {
+                        score: sum / counts[axis],
+                        weight: weightsAggregated[axis] / counts[axis]
+                    }
+                ])
+            ) as Record<PoliticalAxis, WeightedScore>;
 
             onComplete(finalScores);
         }

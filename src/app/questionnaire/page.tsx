@@ -2,22 +2,17 @@
 
 import React, { useState } from 'react';
 import Questionnaire from '@/components/Questionnaire';
-import { PoliticalAxis } from '@/lib/constants';
+import { PoliticalAxis, WeightedScore } from '@/lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-
 import { useRouter } from 'next/navigation';
 
 export default function QuestionnairePage() {
     const router = useRouter();
-    const [results, setResults] = useState<Record<PoliticalAxis, number> | null>(null);
+    const [results, setResults] = useState<Record<PoliticalAxis, WeightedScore> | null>(null);
 
-    const handleComplete = (userScores: Record<PoliticalAxis, number>) => {
-
-        // Sauvegarde locale pour Victor
+    const handleComplete = (userScores: Record<PoliticalAxis, WeightedScore>) => {
+        // Sauvegarde locale
         sessionStorage.setItem('userScores', JSON.stringify(userScores));
-
-        // Redirection directe vers les calculs théâtraux sur la page de résultats
         router.push('/resultats');
     };
 

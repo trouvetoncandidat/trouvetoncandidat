@@ -2,210 +2,210 @@
     {
         "id": "q1",
         "theme": "Économie",
-        "text": "Faut-il rétablir et renforcer l'Impôt de Solidarité sur la Fortune (ISF) pour taxer fortement les hauts patrimoines ?",
+        "text": "Faut-il rétablir un impôt sur la fortune pour taxer davantage ceux qui possèdent un très gros patrimoine (maisons, placements) ?",
         "axis": "economie",
         "reversed": true
     },
     {
         "id": "q2",
         "theme": "Économie",
-        "text": "Faut-il interdire aux grandes entreprises de verser des dividendes à leurs actionnaires si ces montants sont supérieurs aux bénéfices réalisés ou si elles perçoivent des aides de l'État ?",
+        "text": "Faut-il empêcher les grandes entreprises de verser de l'argent à leurs actionnaires si elles reçoivent des aides financières de l'État ?",
         "axis": "economie",
         "reversed": true
     },
     {
         "id": "q3",
         "theme": "Économie",
-        "text": "Faut-il baisser massivement les impôts de production des entreprises (à hauteur de 30 milliards d'euros) pour relancer l'industrie française ?",
+        "text": "Faut-il baisser les impôts payés par les entreprises et les usines pour les aider à produire davantage en France ?",
         "axis": "economie",
         "reversed": false
     },
     {
         "id": "q4",
         "theme": "Social",
-        "text": "Faut-il plafonner l'ensemble des aides sociales (hors handicap et vieillesse) à 70 % du SMIC net pour s'assurer que le travail paie toujours plus que l'assistance ?",
+        "text": "Faut-il limiter le montant total des aides sociales pour qu'une personne qui travaille gagne toujours plus que si elle ne travaillait pas ?",
         "axis": "social",
         "reversed": false
     },
     {
         "id": "q5",
         "theme": "Social",
-        "text": "Faut-il garantir un revenu d'autonomie (autour de 1 060 €) versé inconditionnellement aux jeunes dès 18 ans et aux personnes sous le seuil de pauvreté ?",
+        "text": "Faut-il donner une somme d'argent fixe tous les mois (environ 1 000 €) à tous les jeunes et aux plus pauvres, sans conditions ?",
         "axis": "social",
         "reversed": true
     },
     {
         "id": "q6",
         "theme": "Social",
-        "text": "Faut-il repousser l'âge légal de départ à la retraite à 64 ans ou plus pour équilibrer le système ?",
+        "text": "Faut-il reculer l'âge de départ à la retraite à 64 ans ou plus pour financer le système ?",
         "axis": "social",
         "reversed": false
     },
     {
         "id": "q7",
         "theme": "Écologie",
-        "text": "Faut-il inscrire une « règle verte » dans la Constitution interdisant formellement de prélever à la nature plus de ressources qu'elle ne peut en reconstituer ?",
+        "text": "Faut-il voter une loi qui interdit de prendre à la nature plus de ressources que ce qu'elle peut produire ?",
         "axis": "ecologie",
         "reversed": true
     },
     {
         "id": "q8",
         "theme": "Écologie",
-        "text": "Faut-il interdire d'urgence les pesticides dangereux (comme le glyphosate) et planifier le passage vers une agriculture 100 % biologique ?",
+        "text": "Faut-il interdire tout de suite les pesticides chimiques (contre les mauvaises herbes ou insectes) et passer à une agriculture 100 % biologique ?",
         "axis": "ecologie",
         "reversed": true
     },
     {
         "id": "q9",
         "theme": "Écologie",
-        "text": "Faut-il abolir toutes les Zones à Faibles Émissions (ZFE) qui interdisent la circulation des véhicules anciens dans les agglomérations ?",
+        "text": "Faut-il supprimer les zones qui interdisent aux voitures anciennes de circuler dans les grandes villes ?",
         "axis": "ecologie",
         "reversed": false
     },
     {
         "id": "q10",
         "theme": "Europe",
-        "text": "Faut-il modifier la Constitution pour affirmer la supériorité absolue des lois françaises sur les directives et traités de l'Union européenne ?",
+        "text": "Faut-il décider que les lois françaises doivent toujours passer avant les décisions prises par l'Union européenne ?",
         "axis": "europe",
         "reversed": false
     },
     {
         "id": "q11",
         "theme": "Europe",
-        "text": "Faut-il créer un budget européen massif et des taxes européennes propres (ex: taxe sur les multinationales) pour financer la transition climatique ?",
+        "text": "Faut-il créer de nouveaux impôts européens sur les grandes entreprises mondiales pour financer la protection du climat ?",
         "axis": "europe",
         "reversed": true
     },
     {
         "id": "q12",
         "theme": "Europe",
-        "text": "La France doit-elle opposer un veto systématique à la signature de tout nouveau traité de libre-échange international par l'Union européenne ?",
+        "text": "La France doit-elle s'opposer aux nouveaux accords de commerce avec les autres pays pour protéger ses propres produits ?",
         "axis": "europe",
         "reversed": false
     },
     {
         "id": "q13",
         "theme": "Sécurité",
-        "text": "Faut-il accorder une « présomption de légitime défense » automatique aux forces de l'ordre en cas d'usage de leur arme ?",
+        "text": "Faut-il considérer que les policiers sont d'office en état de légitime défense s'ils utilisent leur arme en service ?",
         "axis": "securite",
         "reversed": false
     },
     {
         "id": "q14",
         "theme": "Sécurité",
-        "text": "Faut-il rétablir les peines planchers obligatoires pour garantir que chaque délinquant et criminel reçoive une sanction ferme ?",
+        "text": "Faut-il imposer des peines de prison obligatoires et automatiques pour chaque délit grave afin de punir plus sévèrement ?",
         "axis": "securite",
         "reversed": false
     },
     {
         "id": "q15",
         "theme": "Sécurité",
-        "text": "Faut-il démanteler les Brigades Anticriminalité (BAC) et interdire l'usage des LBD et grenades de désencerclement en manifestation ?",
+        "text": "Faut-il arrêter d'utiliser certaines armes (comme les grenades ou les lanceurs de balles de défense) pendant les manifestations ?",
         "axis": "securite",
         "reversed": true
     },
     {
         "id": "q16",
         "theme": "Immigration",
-        "text": "Faut-il supprimer purement et simplement le droit du sol, pour que la nationalité française ne puisse s'obtenir que par le sang ou le mérite ?",
+        "text": "Faut-il supprimer le droit du sol (le fait de devenir Français car on est né en France) pour que seuls les enfants de parents français puissent être français ?",
         "axis": "immigration",
         "reversed": false
     },
     {
         "id": "q17",
         "theme": "Immigration",
-        "text": "Faut-il supprimer l'Aide Médicale d'État (AME) gratuite pour les étrangers en situation irrégulière, pour ne conserver qu'une urgence vitale ?",
+        "text": "Faut-il arrêter de soigner gratuitement les étrangers qui ne sont pas en règle en France (sauf en cas d'urgence absolue) ?",
         "axis": "immigration",
         "reversed": false
     },
     {
         "id": "q18",
         "theme": "Immigration",
-        "text": "Faut-il procéder à la régularisation large et systématique des travailleurs sans-papiers présents en France ?",
+        "text": "Faut-il donner des papiers et régulariser tous les travailleurs étrangers sans-papiers qui travaillent déjà en France ?",
         "axis": "immigration",
         "reversed": true
     },
     {
         "id": "q19",
         "theme": "Services Publics",
-        "text": "Faut-il mettre fin à la liberté d'installation des médecins (les contraindre à s'implanter où l'État le décide) pour lutter contre les déserts médicaux ?",
+        "text": "Faut-il obliger les médecins à s'installer dans les endroits où il n'y a plus assez de docteurs (les déserts médicaux) ?",
         "axis": "services_publics",
         "reversed": true
     },
     {
         "id": "q20",
         "theme": "Services Publics",
-        "text": "Faut-il recruter 1 million d'agents supplémentaires dans les services publics pour répondre aux urgences (hôpitaux, écoles, etc.) ?",
+        "text": "Faut-il embaucher beaucoup plus de fonctionnaires (professeurs, soignants, policiers) pour améliorer les services de l'État ?",
         "axis": "services_publics",
         "reversed": true
     },
     {
         "id": "q21",
         "theme": "Services Publics",
-        "text": "Faut-il réinstaurer trois jours de carence stricts pour les arrêts maladie des fonctionnaires afin de les aligner sur le secteur privé et réduire les dépenses ?",
+        "text": "Faut-il augmenter le nombre de jours non payés quand un fonctionnaire tombe malade pour faire des économies ?",
         "axis": "services_publics",
         "reversed": false
     },
     {
         "id": "q22",
         "theme": "Énergie",
-        "text": "Faut-il planifier la sortie totale du nucléaire et abandonner tout projet de nouvelle centrale ?",
+        "text": "Faut-il fermer toutes les centrales nucléaires et arrêter d'en construire de nouvelles ?",
         "axis": "energie",
         "reversed": true
     },
     {
         "id": "q23",
         "theme": "Énergie",
-        "text": "Faut-il, à l'inverse, lancer un programme massif de construction d'au moins 14 nouveaux réacteurs nucléaires (EPR) ?",
+        "text": "Faut-il lancer la construction de plusieurs nouvelles centrales nucléaires pour produire de l'électricité ?",
         "axis": "energie",
         "reversed": false
     },
     {
         "id": "q24",
         "theme": "Énergie",
-        "text": "Faut-il arrêter l'installation de nouvelles éoliennes (terrestres et marines) et démanteler progressivement celles qui existent ?",
+        "text": "Faut-il arrêter d'installer des éoliennes et démonter progressivement celles qui fonctionnent déjà ?",
         "axis": "energie",
         "reversed": false
     },
     {
         "id": "q25",
         "theme": "Institutions",
-        "text": "Faut-il convoquer une Assemblée constituante chargée de rédiger une nouvelle Constitution pour passer à une 6e République ?",
+        "text": "Faut-il changer totalement de système politique et réécrire une nouvelle Constitution pour la France ?",
         "axis": "institutions",
         "reversed": true
     },
     {
         "id": "q26",
         "theme": "Institutions",
-        "text": "Faut-il abaisser le droit de vote à 16 ans pour toutes les élections afin d'impliquer davantage la jeunesse ?",
+        "text": "Faut-il donner le droit de vote dès l'âge de 16 ans ?",
         "axis": "institutions",
         "reversed": true
     },
     {
         "id": "q27",
         "theme": "Institutions",
-        "text": "Faut-il autoriser le Parlement (à la majorité des 3/5e) à contourner une décision du Conseil Constitutionnel pour mettre fin au « gouvernement des juges » ?",
+        "text": "Faut-il que les députés puissent voter une loi qui va contre une décision du Conseil constitutionnel ?",
         "axis": "institutions",
         "reversed": false
     },
     {
         "id": "q28",
         "theme": "International",
-        "text": "Faut-il porter le budget des armées françaises à un niveau historique (entre 55 et 70 milliards d'euros) pour retrouver un statut de puissance d'intervention mondiale ?",
+        "text": "Faut-il augmenter massivement l'argent donné à l'armée française pour redevenir une grande puissance militaire dans le monde ?",
         "axis": "international",
         "reversed": false
     },
     {
         "id": "q29",
         "theme": "International",
-        "text": "Faut-il conditionner l'aide financière au développement versée aux pays étrangers à leur acceptation de reprendre leurs ressortissants clandestins expulsés de France ?",
+        "text": "Faut-il arrêter d'aider financièrement les pays étrangers s'ils refusent de récupérer leurs habitants expulsés de France ?",
         "axis": "international",
         "reversed": false
     },
     {
         "id": "q30",
         "theme": "International",
-        "text": "Faut-il mettre en place une commission officielle chargée de déterminer les préjudices et réparations à accorder suite à l'esclavage et à la colonisation française ?",
+        "text": "Faut-il créer une commission pour décider si la France doit payer des réparations à cause de l'esclavage ou de la colonisation ?",
         "axis": "international",
         "reversed": true
     }

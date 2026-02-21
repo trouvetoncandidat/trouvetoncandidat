@@ -1,4 +1,4 @@
-import { Candidate, PoliticalAxis } from './constants';
+import { Candidate, PoliticalAxis, WeightedScore } from './constants';
 
 export interface MatchResult {
     candidate: Candidate;
@@ -8,41 +8,45 @@ export interface MatchResult {
 
 /**
  * Calcule la compatibilité entre l'utilisateur et tous les candidats.
- * Logique : Différence absolue normalisée, exclusion des axes neutres.
+ * Logique : Moyenne pondérée par l'intensité des convictions de l'utilisateur.
  */
 export function calculateMatches(
-    userScores: Record<PoliticalAxis, number>,
+    userScores: Record<PoliticalAxis, WeightedScore>,
     candidates: Candidate[]
 ): MatchResult[] {
 
     return candidates.map((candidate) => {
         const axisMatches: Record<string, number> = {};
-        let totalScoreSum = 0;
-        let relevantAxesCount = 0;
+        let weightedScoreSum = 0;
+        let totalWeight = 0;
 
         // Parcourir tous les axes du score utilisateur
-        for (const [axis, userScore] of Object.entries(userScores)) {
+        for (const [axis, weightedUserScore] of Object.entries(userScores)) {
             const polAxis = axis as PoliticalAxis;
+            const { score: userScore, weight } = weightedUserScore;
             const candidateScore = candidate.scores[polAxis] ?? 0;
 
-            // Règle "Passer" : si userScore est 0, on n'inclut pas dans la moyenne globale
-            if (userScore === 0) {
-                axisMatches[polAxis] = 50; // Valeur neutre visuelle
+            // Règle "Neutre" : si l'utilisateur est neutre et que le poids est faible
+            if (userScore === 0 && weight <= 0.5) {
+                axisMatches[polAxis] = 50;
                 continue;
             }
 
-            // Formule demandée : 1 - (Math.abs(userScore - candidateScore) / 2)
+            // Calcul du match sur cet axe
             const diff = Math.abs(userScore - candidateScore);
             const matchLevel = 1 - (diff / 2);
             const matchPercentage = Math.round(matchLevel * 100);
 
             axisMatches[polAxis] = matchPercentage;
-            totalScoreSum += matchPercentage;
-            relevantAxesCount++;
+
+            // Application du poids de l'intensité (matrice de conviction)
+            weightedScoreSum += (matchPercentage * weight);
+            totalWeight += weight;
         }
 
-        const globalMatch = relevantAxesCount > 0
-            ? Math.round(totalScoreSum / relevantAxesCount)
+        // Moyenne pondérée
+        const globalMatch = totalWeight > 0
+            ? Math.round(weightedScoreSum / totalWeight)
             : 0;
 
         return {
@@ -66,14 +70,16 @@ export interface IdealMeasure {
  * du positionnement de l'utilisateur chez les vrais candidats.
  */
 export function generateIdealCandidate(
-    userScores: Record<PoliticalAxis, number>,
+    userScores: Record<PoliticalAxis, WeightedScore>,
     candidates: Candidate[]
 ): IdealMeasure[] {
     const idealProgram: IdealMeasure[] = [];
 
-    for (const [axis, userScore] of Object.entries(userScores)) {
+    for (const [axis, weightedUserScore] of Object.entries(userScores)) {
         const polAxis = axis as PoliticalAxis;
-        if (userScore === 0) continue; // On ignore les axes neutres
+        const { score: userScore } = weightedUserScore;
+
+        if (userScore === 0) continue;
 
         let bestMeasure: IdealMeasure | null = null;
         let minDiff = Infinity;
@@ -104,15 +110,15 @@ export function generateIdealCandidate(
 
     return idealProgram;
 }
+
 /**
  * Détermine un "Badge de Profil" basé sur les scores de l'utilisateur.
  */
-export function getPoliticalProfile(scores: Record<PoliticalAxis, number>): { title: string; subtitle: string } {
-    const eco = scores['economie'] || 0;
-    const ecoG = scores['ecologie'] || 0;
-    const eur = scores['europe'] || 0;
-    const soc = scores['social'] || 0;
-    // const socie = scores['societe'] || 0; // Axis removed in new dataset
+export function getPoliticalProfile(scores: Record<PoliticalAxis, WeightedScore>): { title: string; subtitle: string } {
+    const eco = scores['economie']?.score || 0;
+    const ecoG = scores['ecologie']?.score || 0;
+    const eur = scores['europe']?.score || 0;
+    const soc = scores['social']?.score || 0;
 
     let title = "Le Citoyen";
     let subtitle = "En quête de repères";
@@ -123,7 +129,7 @@ export function getPoliticalProfile(scores: Record<PoliticalAxis, number>): { ti
     } else if (eco < -0.4 && soc < -0.4) {
         title = "Le Progressiste Social";
         subtitle = "Solidarité et justice d'État";
-    } else if (ecoG < -0.4) { // Note: flipped logic if needed, ecoG -1 is pro-ecology
+    } else if (ecoG < -0.4) {
         title = "L'Éclaireur Écolo";
         subtitle = "La planète avant tout";
     } else if (eur > 0.4) {
