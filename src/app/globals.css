@@ -17,20 +17,41 @@
   --color-input: #e5e5e5;
   --color-ring: #000091;
 
-  --radius-lg: 0.5rem;
-  --radius-md: 0.375rem;
-  --radius-sm: 0.25rem;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+  --radius-sm: 0.5rem;
+
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-geist-sans), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  * {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    border-color: var(--color-border);
   }
 }
 
@@ -45,27 +66,36 @@
   height: 4px;
 }
 
+@keyframes pulsate-subtle {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 145, 0.3);
+  }
+
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 145, 0.4);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 145, 0.3);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulsate-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    /* Keep white even in dark mode for institutional look if preferred, but usually we follow system */
+    /* For this project, let's stick to a clean white look regardless of system for the "National" feel unless specified */
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

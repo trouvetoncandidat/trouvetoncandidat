@@ -84,11 +84,11 @@ export function generateIdealCandidate(
 
             if (diff < minDiff) {
                 minDiff = diff;
-                const matchingProp = candidate.propositions.find(p => p.axis === polAxis);
-                if (matchingProp) {
+                const justification = candidate.justifications[polAxis];
+                if (justification) {
                     bestMeasure = {
                         axis: polAxis,
-                        content: matchingProp.content,
+                        content: justification,
                         sourceCandidate: candidate.name,
                         sourceParty: candidate.party,
                         score: candidateScore
@@ -108,31 +108,25 @@ export function generateIdealCandidate(
  * Détermine un "Badge de Profil" basé sur les scores de l'utilisateur.
  */
 export function getPoliticalProfile(scores: Record<PoliticalAxis, number>): { title: string; subtitle: string } {
-    const eco = scores['économie'] || 0;
-    const ecoG = scores['écologie'] || 0;
+    const eco = scores['economie'] || 0;
+    const ecoG = scores['ecologie'] || 0;
     const eur = scores['europe'] || 0;
     const soc = scores['social'] || 0;
-    const socie = scores['société'] || 0;
+    // const socie = scores['societe'] || 0; // Axis removed in new dataset
 
     let title = "Le Citoyen";
     let subtitle = "En quête de repères";
 
-    if (socie < -0.4) {
-        title = "Le Progressiste Sociétal";
-        subtitle = "Libertés individuelles et nouveaux droits";
-    } else if (socie > 0.4) {
-        title = "Le Conservateur";
-        subtitle = "Défense des traditions et des valeurs";
-    } else if (eco > 0.4 && eur > 0.4) {
+    if (eco > 0.4 && eur > 0.4) {
         title = "Le Libéral Européen";
         subtitle = "Marché libre et destin commun";
     } else if (eco < -0.4 && soc < -0.4) {
         title = "Le Progressiste Social";
         subtitle = "Solidarité et justice d'État";
-    } else if (ecoG > 0.4) {
+    } else if (ecoG < -0.4) { // Note: flipped logic if needed, ecoG -1 is pro-ecology
         title = "L'Éclaireur Écolo";
         subtitle = "La planète avant tout";
-    } else if (eur < -0.4) {
+    } else if (eur > 0.4) {
         title = "Le Souverainiste";
         subtitle = "La France d'abord";
     } else if (Math.abs(eco) < 0.2 && Math.abs(soc) < 0.2) {

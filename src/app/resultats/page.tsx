@@ -115,7 +115,7 @@ export default function ResultsPage() {
                     });
                     return;
                 } catch (shareErr) {
-                    console.log('Share canceled or failed', shareErr);
+                    // Share canceled or failed
                 }
             }
 
@@ -144,7 +144,7 @@ export default function ResultsPage() {
                     url: url,
                 });
             } catch (err) {
-                console.log('Sharing error', err);
+                // Sharing error
             }
         } else {
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + '\n' + url)}`;
@@ -309,7 +309,7 @@ export default function ResultsPage() {
                                     <button
                                         onClick={() => handleShareImage('REAL')}
                                         disabled={!!exportingType}
-                                        className="w-full max-w-sm mx-auto flex items-center justify-center gap-4 px-8 h-16 bg-[#000091] text-white rounded-2xl font-black text-lg transition-all active:scale-95 shadow-lg group"
+                                        className="w-full max-w-sm mx-auto flex items-center justify-center gap-4 px-8 h-16 bg-[#000091] text-white rounded-2xl font-black text-lg transition-all active:scale-95 shadow-lg group animate-pulse-subtle"
                                     >
                                         {exportingType === 'REAL' ? <RefreshCw className="animate-spin" size={20} /> : <Share2 size={20} />}
                                         Partager mon Match

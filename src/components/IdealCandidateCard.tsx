@@ -43,11 +43,9 @@ export default function IdealCandidateCard({ measures }: IdealCandidateCardProps
                     {measures.map((measure, idx) => (
                         <div key={idx} className="group flex flex-col md:flex-row gap-4 p-6 bg-accent border border-border hover:border-primary transition-colors">
                             <div className="flex-1 space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-white px-2 py-0.5 border border-primary/20">
-                                        {measure.axis}
-                                    </span>
-                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-white px-2 py-0.5 border border-primary/20">
+                                    {measure.axis.replace('_', ' ')}
+                                </span>
                                 <p className="text-lg font-extrabold leading-tight text-foreground">
                                     « {measure.content} »
                                 </p>

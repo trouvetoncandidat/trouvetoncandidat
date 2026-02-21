@@ -16,6 +16,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "TrouveTonCandidat.fr | Le comparateur politique 100% neutre",
   description: "Comparez les programmes des candidats à l'élection présidentielle 2027 en 2 minutes. Algorithme Open Source, 100% anonyme.",
+  metadataBase: new URL('https://trouvetoncandidat.fr'),
+  openGraph: {
+    title: "TrouveTonCandidat.fr | Votez pour un programme, pas pour un visage",
+    description: "Comparez les programmes des candidats 2027 de manière neutre et anonyme.",
+    url: 'https://trouvetoncandidat.fr',
+    siteName: 'TrouveTonCandidat.fr',
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "TrouveTonCandidat.fr | Le comparateur politique neutre",
+    description: "Qui défend vraiment vos idées pour 2027 ? Faites le test en 2 minutes.",
+  },
 };
 
 export const viewport = {
@@ -32,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden w-full selection:bg-primary/10`}
       >

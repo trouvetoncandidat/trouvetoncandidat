@@ -1,15 +1,14 @@
 export const POLITICAL_AXES = {
-    ECONOMIE: 'économie',
+    ECONOMIE: 'economie',
     SOCIAL: 'social',
-    ECOLOGIE: 'écologie',
+    ECOLOGIE: 'ecologie',
     EUROPE: 'europe',
-    SECURITE: 'sécurité',
+    SECURITE: 'securite',
     IMMIGRATION: 'immigration',
-    SERVICES_PUBLICS: 'services publics',
-    ENERGIE: 'énergie',
+    SERVICES_PUBLICS: 'services_publics',
+    ENERGIE: 'energie',
     INSTITUTIONS: 'institutions',
     INTERNATIONAL: 'international',
-    SOCIETE: 'société',
 } as const;
 
 export type PoliticalAxis = typeof POLITICAL_AXES[keyof typeof POLITICAL_AXES];
@@ -26,8 +25,9 @@ export interface Candidate {
     id: string;
     name: string;
     party: string;
-    propositions: Proposition[];
-    scores: Record<PoliticalAxis, number>;
+    scores: Record<string, number>;
+    justifications: Record<string, string>;
+    description: string;
 }
 
 export interface Question {

@@ -2,211 +2,211 @@
     {
         "id": "q1",
         "theme": "Économie",
-        "text": "Faut-il rétablir et renforcer l'ISF pour taxer les hauts patrimoines ?",
-        "axis": "économie",
+        "text": "Faut-il rétablir et renforcer l'Impôt de Solidarité sur la Fortune (ISF) pour taxer fortement les hauts patrimoines ?",
+        "axis": "economie",
         "reversed": true
     },
     {
         "id": "q2",
         "theme": "Économie",
-        "text": "Faut-il baisser massivement les impôts de production des entreprises (CVAE, CFE) pour relancer l'industrie ?",
-        "axis": "économie",
-        "reversed": false
+        "text": "Faut-il interdire aux grandes entreprises de verser des dividendes à leurs actionnaires si ces montants sont supérieurs aux bénéfices réalisés ou si elles perçoivent des aides de l'État ?",
+        "axis": "economie",
+        "reversed": true
     },
     {
         "id": "q3",
         "theme": "Économie",
-        "text": "Faut-il bloquer strictement par la loi les prix des produits de première nécessité (carburant, alimentation, énergie) ?",
-        "axis": "économie",
-        "reversed": true
+        "text": "Faut-il baisser massivement les impôts de production des entreprises (à hauteur de 30 milliards d'euros) pour relancer l'industrie française ?",
+        "axis": "economie",
+        "reversed": false
     },
     {
         "id": "q4",
         "theme": "Social",
-        "text": "Faut-il réduire le temps de travail hebdomadaire pour aller vers la semaine de 32 heures ou de 4 jours ?",
-        "axis": "social",
-        "reversed": true
-    },
-    {
-        "id": "q5",
-        "theme": "Social",
-        "text": "Faut-il supprimer totalement les cotisations sociales salariales et patronales sur les heures supplémentaires ?",
+        "text": "Faut-il plafonner l'ensemble des aides sociales (hors handicap et vieillesse) à 70 % du SMIC net pour s'assurer que le travail paie toujours plus que l'assistance ?",
         "axis": "social",
         "reversed": false
     },
     {
+        "id": "q5",
+        "theme": "Social",
+        "text": "Faut-il garantir un revenu d'autonomie (autour de 1 060 €) versé inconditionnellement aux jeunes dès 18 ans et aux personnes sous le seuil de pauvreté ?",
+        "axis": "social",
+        "reversed": true
+    },
+    {
         "id": "q6",
         "theme": "Social",
-        "text": "Faut-il plafonner le cumul des aides sociales pour garantir que le travail paie toujours plus que l'assistance ?",
+        "text": "Faut-il repousser l'âge légal de départ à la retraite à 64 ans ou plus pour équilibrer le système ?",
         "axis": "social",
         "reversed": false
     },
     {
         "id": "q7",
         "theme": "Écologie",
-        "text": "Faut-il inscrire une 'règle verte' dans la Constitution interdisant de prélever plus que ce que la nature reconstitue ?",
-        "axis": "écologie",
+        "text": "Faut-il inscrire une « règle verte » dans la Constitution interdisant formellement de prélever à la nature plus de ressources qu'elle ne peut en reconstituer ?",
+        "axis": "ecologie",
         "reversed": true
     },
     {
         "id": "q8",
         "theme": "Écologie",
-        "text": "Faut-il mettre en place un 'bouclier industriel écologique' européen protégeant nos entreprises de la concurrence ?",
-        "axis": "écologie",
-        "reversed": false
+        "text": "Faut-il interdire d'urgence les pesticides dangereux (comme le glyphosate) et planifier le passage vers une agriculture 100 % biologique ?",
+        "axis": "ecologie",
+        "reversed": true
     },
     {
         "id": "q9",
         "theme": "Écologie",
-        "text": "Faut-il instaurer une alternative végétarienne quotidienne et obligatoire dans toutes les cantines scolaires ?",
-        "axis": "écologie",
-        "reversed": true
-    },
-    {
-        "id": "q10",
-        "theme": "Énergie",
-        "text": "Faut-il planifier la sortie totale de l'énergie nucléaire pour passer au 100 % énergies renouvelables ?",
-        "axis": "énergie",
-        "reversed": true
-    },
-    {
-        "id": "q11",
-        "theme": "Énergie",
-        "text": "Faut-il mettre fin immédiatement à tous les nouveaux projets d'éoliennes, sur terre comme sur mer ?",
-        "axis": "énergie",
+        "text": "Faut-il abolir toutes les Zones à Faibles Émissions (ZFE) qui interdisent la circulation des véhicules anciens dans les agglomérations ?",
+        "axis": "ecologie",
         "reversed": false
     },
     {
+        "id": "q10",
+        "theme": "Europe",
+        "text": "Faut-il modifier la Constitution pour affirmer la supériorité absolue des lois françaises sur les directives et traités de l'Union européenne ?",
+        "axis": "europe",
+        "reversed": false
+    },
+    {
+        "id": "q11",
+        "theme": "Europe",
+        "text": "Faut-il créer un budget européen massif et des taxes européennes propres (ex: taxe sur les multinationales) pour financer la transition climatique ?",
+        "axis": "europe",
+        "reversed": true
+    },
+    {
         "id": "q12",
-        "theme": "Énergie",
-        "text": "Faut-il lancer la construction massive de nouveaux réacteurs nucléaires (ex: 14 EPR) pour assurer notre souveraineté ?",
-        "axis": "énergie",
+        "theme": "Europe",
+        "text": "La France doit-elle opposer un veto systématique à la signature de tout nouveau traité de libre-échange international par l'Union européenne ?",
+        "axis": "europe",
         "reversed": false
     },
     {
         "id": "q13",
-        "theme": "Immigration",
-        "text": "Faut-il supprimer le droit du sol, limitant ainsi l'accès à la nationalité à la seule naturalisation au mérite ?",
-        "axis": "immigration",
+        "theme": "Sécurité",
+        "text": "Faut-il accorder une « présomption de légitime défense » automatique aux forces de l'ordre en cas d'usage de leur arme ?",
+        "axis": "securite",
         "reversed": false
     },
     {
         "id": "q14",
-        "theme": "Immigration",
-        "text": "Faut-il procéder à la régularisation systématique des travailleurs sans-papiers présents sur le territoire ?",
-        "axis": "immigration",
-        "reversed": true
-    },
-    {
-        "id": "q15",
-        "theme": "Immigration",
-        "text": "Faut-il réserver les aides sociales de l'État et le logement social aux seuls citoyens français et européens ?",
-        "axis": "immigration",
+        "theme": "Sécurité",
+        "text": "Faut-il rétablir les peines planchers obligatoires pour garantir que chaque délinquant et criminel reçoive une sanction ferme ?",
+        "axis": "securite",
         "reversed": false
     },
     {
-        "id": "q16",
+        "id": "q15",
         "theme": "Sécurité",
-        "text": "Faut-il instaurer des peines planchers obligatoires pour garantir une sanction ferme à tous les délinquants ?",
-        "axis": "sécurité",
+        "text": "Faut-il démanteler les Brigades Anticriminalité (BAC) et interdire l'usage des LBD et grenades de désencerclement en manifestation ?",
+        "axis": "securite",
+        "reversed": true
+    },
+    {
+        "id": "q16",
+        "theme": "Immigration",
+        "text": "Faut-il supprimer purement et simplement le droit du sol, pour que la nationalité française ne puisse s'obtenir que par le sang ou le mérite ?",
+        "axis": "immigration",
         "reversed": false
     },
     {
         "id": "q17",
-        "theme": "Sécurité",
-        "text": "Faut-il légaliser et encadrer par l'État la consommation et la vente de cannabis récréatif ?",
-        "axis": "sécurité",
-        "reversed": true
-    },
-    {
-        "id": "q18",
-        "theme": "Sécurité",
-        "text": "Faut-il accorder une présomption de légitime défense aux forces de l'ordre en cas d'usage de leur arme ?",
-        "axis": "sécurité",
+        "theme": "Immigration",
+        "text": "Faut-il supprimer l'Aide Médicale d'État (AME) gratuite pour les étrangers en situation irrégulière, pour ne conserver qu'une urgence vitale ?",
+        "axis": "immigration",
         "reversed": false
     },
     {
+        "id": "q18",
+        "theme": "Immigration",
+        "text": "Faut-il procéder à la régularisation large et systématique des travailleurs sans-papiers présents en France ?",
+        "axis": "immigration",
+        "reversed": true
+    },
+    {
         "id": "q19",
-        "theme": "Institutions",
-        "text": "Faut-il convoquer une Assemblée constituante pour rédiger une nouvelle Constitution et passer à une VIe République ?",
-        "axis": "institutions",
+        "theme": "Services Publics",
+        "text": "Faut-il mettre fin à la liberté d'installation des médecins (les contraindre à s'implanter où l'État le décide) pour lutter contre les déserts médicaux ?",
+        "axis": "services_publics",
         "reversed": true
     },
     {
         "id": "q20",
-        "theme": "Institutions",
-        "text": "Faut-il modifier la Constitution pour affirmer la supériorité absolue des lois nationales sur le droit européen ?",
-        "axis": "institutions",
-        "reversed": false
-    },
-    {
-        "id": "q21",
-        "theme": "Institutions",
-        "text": "Faut-il abaisser l'âge du droit de vote à 16 ans pour toutes les élections ?",
-        "axis": "institutions",
+        "theme": "Services Publics",
+        "text": "Faut-il recruter 1 million d'agents supplémentaires dans les services publics pour répondre aux urgences (hôpitaux, écoles, etc.) ?",
+        "axis": "services_publics",
         "reversed": true
     },
     {
+        "id": "q21",
+        "theme": "Services Publics",
+        "text": "Faut-il réinstaurer trois jours de carence stricts pour les arrêts maladie des fonctionnaires afin de les aligner sur le secteur privé et réduire les dépenses ?",
+        "axis": "services_publics",
+        "reversed": false
+    },
+    {
         "id": "q22",
-        "theme": "Europe",
-        "text": "Faut-il créer un budget européen massif (5% du PIB) pour la transformation écologique ?",
-        "axis": "europe",
+        "theme": "Énergie",
+        "text": "Faut-il planifier la sortie totale du nucléaire et abandonner tout projet de nouvelle centrale ?",
+        "axis": "energie",
         "reversed": true
     },
     {
         "id": "q23",
-        "theme": "Europe",
-        "text": "La France doit-elle opposer un veto systématique à tout nouveau traité de libre-échange international ?",
-        "axis": "europe",
+        "theme": "Énergie",
+        "text": "Faut-il, à l'inverse, lancer un programme massif de construction d'au moins 14 nouveaux réacteurs nucléaires (EPR) ?",
+        "axis": "energie",
         "reversed": false
     },
     {
         "id": "q24",
-        "theme": "International",
-        "text": "Faut-il sortir la France du commandement militaire intégré de l'OTAN ?",
-        "axis": "international",
+        "theme": "Énergie",
+        "text": "Faut-il arrêter l'installation de nouvelles éoliennes (terrestres et marines) et démanteler progressivement celles qui existent ?",
+        "axis": "energie",
         "reversed": false
     },
     {
         "id": "q25",
-        "theme": "Services Publics",
-        "text": "Faut-il rendre le port de l'uniforme obligatoire à l'école primaire et au collège ?",
-        "axis": "services publics",
-        "reversed": false
+        "theme": "Institutions",
+        "text": "Faut-il convoquer une Assemblée constituante chargée de rédiger une nouvelle Constitution pour passer à une 6e République ?",
+        "axis": "institutions",
+        "reversed": true
     },
     {
         "id": "q26",
-        "theme": "Services Publics",
-        "text": "Faut-il garantir la gratuité réelle et totale de l'école publique (cantine, transports, fournitures) pour tous ?",
-        "axis": "services publics",
+        "theme": "Institutions",
+        "text": "Faut-il abaisser le droit de vote à 16 ans pour toutes les élections afin d'impliquer davantage la jeunesse ?",
+        "axis": "institutions",
         "reversed": true
     },
     {
         "id": "q27",
-        "theme": "Services Publics",
-        "text": "Faut-il supprimer les Agences Régionales de Santé (ARS) pour simplifier l'administration hospitalière ?",
-        "axis": "services publics",
+        "theme": "Institutions",
+        "text": "Faut-il autoriser le Parlement (à la majorité des 3/5e) à contourner une décision du Conseil Constitutionnel pour mettre fin au « gouvernement des juges » ?",
+        "axis": "institutions",
         "reversed": false
     },
     {
         "id": "q28",
-        "theme": "Société",
-        "text": "Faut-il interdire le port du voile islamique de manière stricte dans l'ensemble de l'espace public ?",
-        "axis": "société",
+        "theme": "International",
+        "text": "Faut-il porter le budget des armées françaises à un niveau historique (entre 55 et 70 milliards d'euros) pour retrouver un statut de puissance d'intervention mondiale ?",
+        "axis": "international",
         "reversed": false
     },
     {
         "id": "q29",
-        "theme": "Société",
-        "text": "Faut-il revenir sur la loi autorisant la Procréation Médicalement Assistée (PMA) pour les femmes seules ?",
-        "axis": "société",
+        "theme": "International",
+        "text": "Faut-il conditionner l'aide financière au développement versée aux pays étrangers à leur acceptation de reprendre leurs ressortissants clandestins expulsés de France ?",
+        "axis": "international",
         "reversed": false
     },
     {
         "id": "q30",
-        "theme": "Société",
-        "text": "Faut-il permettre le changement de genre à l'état civil de manière libre et déclarative ?",
-        "axis": "société",
+        "theme": "International",
+        "text": "Faut-il mettre en place une commission officielle chargée de déterminer les préjudices et réparations à accorder suite à l'esclavage et à la colonisation française ?",
+        "axis": "international",
         "reversed": true
     }
 ]

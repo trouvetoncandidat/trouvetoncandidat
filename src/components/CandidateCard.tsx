@@ -60,6 +60,14 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                     </div>
                 </div>
 
+                {candidate.description && (
+                    <div className="mb-10 p-6 bg-accent/30 border-l-4 border-primary/20">
+                        <p className="text-sm font-medium text-foreground/70 italic leading-relaxed">
+                            {candidate.description}
+                        </p>
+                    </div>
+                )}
+
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="details" className="border-none">
                         <AccordionTrigger className="hover:no-underline border border-border px-6 py-4 flex items-center gap-2 transition-colors hover:bg-gray-50">
@@ -72,7 +80,7 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                             {Object.entries(axisMatches).map(([axis, match]) => (
                                 <div key={axis} className="space-y-3">
                                     <div className="flex justify-between items-end">
-                                        <span className="text-xs font-black uppercase tracking-widest text-foreground/80">{axis}</span>
+                                        <span className="text-xs font-black uppercase tracking-widest text-foreground/80">{axis.replace('_', ' ')}</span>
                                         <span className={`text-sm font-bold ${getMatchColor(match)}`}>{match}%</span>
                                     </div>
                                     <div className="h-1.5 w-full bg-gray-100">
@@ -83,15 +91,15 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                                         />
                                     </div>
 
-                                    {candidate.propositions.find(p => p.axis === axis) && (
+                                    {candidate.justifications[axis] && (
                                         <div className="mt-4 p-5 bg-accent border-l-4 border-primary">
                                             <div className="space-y-3">
                                                 <p className="text-sm font-medium text-foreground leading-relaxed">
-                                                    « {candidate.propositions.find(p => p.axis === axis)?.content} »
+                                                    {candidate.justifications[axis]}
                                                 </p>
                                                 <div className="h-px bg-primary/10 w-12" />
-                                                <p className="text-[10px] text-foreground/50 font-bold uppercase tracking-wider leading-relaxed">
-                                                    Note d'analyse : {candidate.propositions.find(p => p.axis === axis)?.justification}
+                                                <p className="text-[10px] text-foreground/50 font-black uppercase tracking-widest">
+                                                    Position officielle 2027
                                                 </p>
                                             </div>
                                         </div>

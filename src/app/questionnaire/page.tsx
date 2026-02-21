@@ -13,7 +13,6 @@ export default function QuestionnairePage() {
     const [results, setResults] = useState<Record<PoliticalAxis, number> | null>(null);
 
     const handleComplete = (userScores: Record<PoliticalAxis, number>) => {
-        console.log("Calcul des scores en cours...", userScores);
 
         // Sauvegarde locale pour Victor
         sessionStorage.setItem('userScores', JSON.stringify(userScores));

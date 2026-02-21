@@ -86,7 +86,7 @@ export default function StoryExportCard({
                                 <div key={i} className="bg-white/60 backdrop-blur-xl border-4 border-white p-10 rounded-[60px] shadow-[0_15px_35px_rgba(0,0,0,0.05)] flex flex-col gap-4 relative overflow-hidden group">
                                     <div className="flex justify-between items-center relative z-10">
                                         <span className={`text-3xl font-black uppercase tracking-widest ${type === 'REAL' ? 'text-[#000091]' : 'text-[#E1000F]'}`}>
-                                            {m.axis}
+                                            {m.axis.replace('_', ' ')}
                                         </span>
                                         {type === 'IDEAL' && (
                                             <span className="text-2xl font-bold bg-white px-6 py-2 rounded-full text-foreground/40 border border-border shadow-sm">
