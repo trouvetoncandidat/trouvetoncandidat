@@ -64,15 +64,27 @@ export default function Home() {
         </motion.p>
 
         <div className="pt-2 flex flex-col items-center gap-6">
-          <Link href="/questionnaire">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative flex items-center justify-center text-center px-10 md:px-14 py-4 md:py-5 bg-[#000091] text-white rounded-full font-black text-base md:text-xl shadow-xl transition-all"
-            >
-              Lancer le test (3 min) 🚀
-            </motion.div>
-          </Link>
+          <div className="flex flex-col md:flex-row gap-4">
+            <Link href="/questionnaire">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative flex items-center justify-center text-center px-10 md:px-14 py-4 md:py-5 bg-[#000091] text-white rounded-full font-black text-base md:text-xl shadow-xl transition-all"
+              >
+                Lancer le test (3 min) 🚀
+              </motion.div>
+            </Link>
+
+            <Link href="/comparer">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative flex items-center justify-center text-center px-8 md:px-10 py-4 md:py-5 bg-white border-2 border-primary/20 text-primary rounded-full font-black text-base md:text-xl shadow-sm hover:shadow-md transition-all"
+              >
+                Comparer les candidats ⚖️
+              </motion.div>
+            </Link>
+          </div>
 
           <div className="flex items-center gap-6 text-[9px] font-bold text-foreground/30 uppercase tracking-[0.1em]">
             <span>Gratuit • Anonyme • Sans Pub</span>
@@ -123,15 +135,6 @@ function ValueCard({ icon, title, description }: { icon: React.ReactNode, title:
         <h3 className="text-[11px] md:text-sm font-black uppercase tracking-tight">{title}</h3>
         <p className="text-foreground/50 font-medium text-[10px] md:text-xs leading-none">{description}</p>
       </div>
-    </div>
-  );
-}
-
-function TrustPillar({ icon, text }: { icon: React.ReactNode, text: string }) {
-  return (
-    <div className="flex items-center gap-2 text-foreground font-black text-[10px] uppercase tracking-widest">
-      <div className="opacity-50">{icon}</div>
-      <span>{text}</span>
     </div>
   );
 }

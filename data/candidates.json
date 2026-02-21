@@ -27,7 +27,8 @@
             "institutions": "\"Abaisser le droit de vote à 16 ans\" et passer à \"une nouvelle République, la VIème\".",
             "international": "\"Réparation des préjudices résultant de la traite et de l’esclavage colonial\"."
         },
-        "description": "Un projet de transition écologique radicale par la planification, couplé à une forte intervention de l'État et une approche fédéraliste européenne."
+        "description": "Un projet de transition écologique radicale par la planification, couplé à une forte intervention de l'État et une approche fédéraliste européenne.",
+        "website": "https://lesecologistes.fr"
     },
     {
         "id": "lfi",
@@ -57,7 +58,8 @@
             "institutions": "\"Convoquer une Assemblée constituante par un référendum\", \"Donner le droit de vote à 16 ans\".",
             "international": "Indépendance et altermondialisme : \"Se retirer du commandement intégré de l’OTAN\"."
         },
-        "description": "Un programme de rupture anticapitaliste axé sur la justice sociale, la 6e République, la sortie du nucléaire et l'indépendance géopolitique."
+        "description": "Un programme de rupture anticapitaliste axé sur la justice sociale, la 6e République, la sortie du nucléaire et l'indépendance géopolitique.",
+        "website": "https://lafranceinsoumise.fr"
     },
     {
         "id": "reconquete",
@@ -87,7 +89,8 @@
             "institutions": "Autorité : \"Permettre au Parlement d’avoir le dernier mot en cas d’inconstitutionnalité d’une loi... fin au gouvernement des juges\".",
             "international": "Puissance militaire : \"Sortir du commandement militaire intégré de l’OTAN\", budget Défense à \"70 milliards d’euros\", \"mettre fin à la repentance coloniale\"."
         },
-        "description": "Un projet conservateur, identitaire et libéral sur le plan économique, centré sur l'arrêt de l'immigration, la sécurité et la souveraineté nationale."
+        "description": "Un projet conservateur, identitaire et libéral sur le plan économique, centré sur l'arrêt de l'immigration, la sécurité et la souveraineté nationale.",
+        "website": "https://www.parti-reconquete.fr"
     },
     {
         "id": "rn",
@@ -117,7 +120,8 @@
             "institutions": "\"Instaurer le Référendum d’Initiative Citoyenne et mettre en place la proportionnelle\".",
             "international": "Puissance militaire : \"Porter le budget de la Défense à 55 milliards d’euros\"."
         },
-        "description": "Un programme national-populiste focalisé sur la préférence nationale, le pouvoir d'achat, la sécurité et la relance du nucléaire."
+        "description": "Un programme national-populiste focalisé sur la préférence nationale, le pouvoir d'achat, la sécurité et la relance du nucléaire.",
+        "website": "https://rassemblementnational.fr"
     },
     {
         "id": "renaissance",
@@ -147,7 +151,8 @@
             "institutions": "Neutre (Ajustements à la marge mentionnés comme la révision de l'article 40 pour la simplification).",
             "international": "\"Dôme de diamant pour assurer notre défense\", retrouver notre \"souveraineté technologique face aux géants américains et chinois\"."
         },
-        "description": "Un projet centriste, libéral-productiviste et pro-européen, misant sur l'innovation, l'intelligence artificielle et la croissance verte."
+        "description": "Un projet centriste, libéral-productiviste et pro-européen, misant sur l'innovation, l'intelligence artificielle et la croissance verte.",
+        "website": "https://parti-renaissance.fr"
     },
     {
         "id": "les-republicains",
@@ -177,6 +182,7 @@
             "institutions": "Neutre (Sujet non traité dans la source fournie).",
             "international": "Neutre (Sujet non traité dans la source fournie)."
         },
-        "description": "Un programme de droite conservatrice et libérale axé exclusivement sur la valorisation du travail, la baisse des charges et la réduction de l'assistanat social."
+        "description": "Un programme de droite conservatrice et libérale axé exclusivement sur la valorisation du travail, la baisse des charges et la réduction de l'assistanat social.",
+        "website": "https://republicains.fr"
     }
 ]

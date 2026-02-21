@@ -12,53 +12,55 @@ interface IdealCandidateCardProps {
 export default function IdealCandidateCard({ measures }: IdealCandidateCardProps) {
     if (measures.length === 0) return null;
 
+    // AXIS LABELS mapping for better display
+    const AXIS_LABELS: Record<string, string> = {
+        economie: 'Économie',
+        social: 'Social',
+        ecologie: 'Écologie',
+        europe: 'Europe',
+        securite: 'Sécurité',
+        immigration: 'Immigration',
+        services_publics: 'Services Publics',
+        energie: 'Énergie',
+        institutions: 'Institutions',
+        international: 'International',
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative w-full overflow-hidden bg-white border-4 border-double border-primary p-1"
+            className="group relative w-full overflow-hidden bg-white border-2 border-primary/20 rounded-[2rem] p-8 shadow-sm"
         >
-            {/* Tricolor Border Corner Decor */}
-            <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-25px] right-[-25px] w-[50px] h-[100px] bg-secondary rotate-45" />
-            </div>
-
-            <div className="border border-border p-6 md:p-10 space-y-10">
-                <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
-                    <div className="space-y-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-widest">
-                            <Sparkles size={12} />
-                            Concept Viral
-                        </div>
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
-                            Votre Programme <span className="text-primary italic">Sur-Mesure.</span>
-                        </h2>
-                        <p className="text-foreground/50 font-bold text-sm">
-                            Voici à quoi ressemblerait le candidat idéal selon nos calculs.
-                        </p>
+            <div className="space-y-8">
+                <div className="flex flex-col gap-4 text-center">
+                    <div className="inline-flex items-center gap-2 justify-center">
+                        <Sparkles size={16} className="text-secondary" />
+                        <h2 className="text-3xl font-black tracking-tighter">Votre Mix Idéal</h2>
                     </div>
+                    <p className="text-foreground/40 font-bold text-xs uppercase tracking-widest max-w-xs mx-auto">
+                        Le parti qui défend le mieux vos convictions sur chaque axe thématique.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-3">
                     {measures.map((measure, idx) => (
-                        <div key={idx} className="group flex flex-col md:flex-row gap-4 p-6 bg-accent border border-border hover:border-primary transition-colors">
-                            <div className="flex-1 space-y-3">
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary bg-white px-2 py-0.5 border border-primary/20">
-                                    {measure.axis.replace('_', ' ')}
-                                </span>
-                                <p className="text-lg font-extrabold leading-tight text-foreground">
-                                    « {measure.content} »
-                                </p>
-                            </div>
-                            <div className="flex items-center md:justify-end gap-3 text-right">
-                                <div className="bg-white border border-border px-4 py-2 space-y-1">
-                                    <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-tighter">Emprunté à</p>
-                                    <p className="text-sm font-black text-foreground">{measure.sourceCandidate}</p>
-                                </div>
-                                <ArrowRight className="text-primary/20 hidden md:block" />
+                        <div key={idx} className="flex items-center justify-between p-4 bg-accent/50 rounded-2xl border border-border/50 group-hover:border-primary/10 transition-colors">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+                                {AXIS_LABELS[measure.axis] || measure.axis.replace('_', ' ')}
+                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-black text-foreground">{measure.sourceParty}</span>
+                                <ArrowRight size={14} className="text-primary/20" />
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div className="pt-4 border-t border-border/50">
+                    <p className="text-[10px] text-center font-bold text-foreground/30 uppercase tracking-widest leading-relaxed">
+                        Ce programme est une recomposition mathématique <br /> basée sur vos intensités de convictions.
+                    </p>
                 </div>
             </div>
         </motion.div>

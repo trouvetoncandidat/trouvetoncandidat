@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { IdealMeasure } from '@/lib/matchAlgorithm';
-import { Sparkles, Target, ShieldCheck, BarChart3, Fingerprint } from 'lucide-react';
+import { Sparkles, Target, ShieldCheck, BarChart3, Fingerprint, ArrowRight } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import RadarChart from './RadarChart';
 import { WeightedScore } from '@/lib/constants';
 
 interface StoryExportCardProps {
-    type: 'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL';
+    type: 'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL' | 'DUEL';
     measures?: IdealMeasure[];
     topMatchName?: string;
     topMatchPercent?: number;
@@ -27,6 +27,20 @@ export default function StoryExportCard({
     candidateScores = {}
 }: StoryExportCardProps) {
 
+    // AXIS LABELS mapping for better display
+    const AXIS_LABELS: Record<string, string> = {
+        economie: 'Économie',
+        social: 'Social',
+        ecologie: 'Écologie',
+        europe: 'Europe',
+        securite: 'Sécurité',
+        immigration: 'Immigration',
+        services_publics: 'Services Publics',
+        energie: 'Énergie',
+        institutions: 'Institutions',
+        international: 'International',
+    };
+
     // Background color based on type
     const getBgTheme = () => {
         switch (type) {
@@ -34,6 +48,7 @@ export default function StoryExportCard({
             case 'MATCH': return 'bg-[#000091]';
             case 'RADAR': return 'bg-[#1D1D1F]';
             case 'IDEAL': return 'bg-[#E1000F]';
+            case 'DUEL': return 'bg-[#000091]';
             default: return 'bg-white';
         }
     };
@@ -111,18 +126,51 @@ export default function StoryExportCard({
                 )}
 
                 {type === 'IDEAL' && (
-                    <div className="w-full space-y-16">
+                    <div className="w-full space-y-20">
                         <div className="text-center space-y-6">
                             <p className="text-5xl font-black uppercase tracking-[0.5em] opacity-60">Mon Programme Idéal</p>
                             <h1 className="text-[160px] font-black leading-none tracking-tighter">Mon Utopie</h1>
                         </div>
-                        <div className="space-y-10">
-                            {measures.slice(0, 3).map((m, i) => (
-                                <div key={i} className="bg-white/10 backdrop-blur-xl border-4 border-white/20 p-16 rounded-[80px] space-y-6">
-                                    <span className="text-4xl font-black uppercase tracking-widest opacity-60">{m.axis.replace('_', ' ')}</span>
-                                    <p className="text-6xl font-black leading-[1.1] tracking-tight italic">« {m.content.slice(0, 140)}... »</p>
+                        <div className="w-full space-y-8">
+                            {measures.map((m, i) => (
+                                <div key={i} className="bg-white/10 backdrop-blur-xl border-4 border-white/20 p-12 rounded-[60px] flex items-center justify-between">
+                                    <span className="text-4xl font-black uppercase tracking-widest opacity-60">
+                                        {AXIS_LABELS[m.axis] || m.axis.replace('_', ' ')}
+                                    </span>
+                                    <div className="flex items-center gap-6">
+                                        <span className="text-5xl font-black tracking-tighter">{m.sourceParty}</span>
+                                        <ArrowRight size={40} className="opacity-40" />
+                                    </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                )}
+
+                {type === 'DUEL' && (
+                    <div className="w-full space-y-20">
+                        <div className="text-center space-y-6">
+                            <p className="text-5xl font-black uppercase tracking-[0.5em] opacity-60">Duel de Programmes</p>
+                            <h1 className="text-[140px] font-black leading-[0.85] tracking-tighter">{profileBadge.subtitle}</h1>
+                        </div>
+                        <div className="bg-white rounded-[100px] p-24 shadow-[0_50px_100px_rgba(0,0,0,0.3)] flex flex-col items-center">
+                            <div className="w-full h-[650px] mb-12">
+                                <RadarChart userScores={userScores} candidateScores={candidateScores} />
+                            </div>
+                            <div className="flex flex-col items-center p-16 bg-primary/5 rounded-[80px] border-8 border-primary/10 w-full">
+                                <span className="text-[200px] font-black leading-none tracking-tighter text-primary">{topMatchPercent}%</span>
+                                <span className="text-6xl font-black uppercase tracking-[0.3em] text-primary/40 mt-4">de Proximité</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-center gap-16 pt-10">
+                            <div className="flex items-center gap-8">
+                                <div className="w-12 h-12 bg-[#000091] rounded-full border-4 border-white" />
+                                <span className="text-5xl font-black uppercase tracking-widest leading-none">Candidat A</span>
+                            </div>
+                            <div className="flex items-center gap-8">
+                                <div className="w-12 h-12 bg-[#E1000F] border-4 border-dashed border-white rounded-full" />
+                                <span className="text-5xl font-black uppercase tracking-widest leading-none">Candidat B</span>
+                            </div>
                         </div>
                     </div>
                 )}
