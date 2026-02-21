@@ -87,27 +87,63 @@ export default function HemicycleGauge({
                         strokeDasharray="4 2"
                     />
 
-                    {/* Point A */}
-                    <motion.circle
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        cx={posA.x} cy={posA.y}
-                        r={sizeA}
-                        fill="#000091"
-                        className="shadow-lg"
-                        filter="url(#glow)"
-                    />
+                    {/* Point A (User) */}
+                    <motion.g
+                        initial="initial"
+                        whileHover="hover"
+                        className="cursor-help"
+                    >
+                        <motion.circle
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            cx={posA.x} cy={posA.y}
+                            r={sizeA}
+                            fill="#000091"
+                            className="shadow-lg"
+                            filter="url(#glow)"
+                        />
+                        <motion.g
+                            variants={{
+                                initial: { opacity: 0, y: 0 },
+                                hover: { opacity: 1, y: -15 }
+                            }}
+                            className="pointer-events-none hidden md:block"
+                        >
+                            <rect x={posA.x - 15} y={posA.y - 35} width="30" height="18" rx="4" fill="#000091" />
+                            <text x={posA.x} y={posA.y - 23} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
+                                {scoreA.toFixed(1)}
+                            </text>
+                        </motion.g>
+                    </motion.g>
 
-                    {/* Point B */}
-                    <motion.circle
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        cx={posB.x} cy={posB.y}
-                        r={sizeB}
-                        fill="#E1000F"
-                        className="shadow-lg"
-                        filter="url(#glow)"
-                    />
+                    {/* Point B (Candidate) */}
+                    <motion.g
+                        initial="initial"
+                        whileHover="hover"
+                        className="cursor-help"
+                    >
+                        <motion.circle
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            cx={posB.x} cy={posB.y}
+                            r={sizeB}
+                            fill="#E1000F"
+                            className="shadow-lg"
+                            filter="url(#glow)"
+                        />
+                        <motion.g
+                            variants={{
+                                initial: { opacity: 0, y: 0 },
+                                hover: { opacity: 1, y: -15 }
+                            }}
+                            className="pointer-events-none hidden md:block"
+                        >
+                            <rect x={posB.x - 15} y={posB.y - 35} width="30" height="18" rx="4" fill="#E1000F" />
+                            <text x={posB.x} y={posB.y - 23} textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
+                                {scoreB.toFixed(1)}
+                            </text>
+                        </motion.g>
+                    </motion.g>
                 </svg>
 
                 {/* Extremes Labels */}

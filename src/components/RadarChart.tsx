@@ -27,6 +27,7 @@ ChartJS.register(
 interface RadarChartProps {
     userScores: Record<string, WeightedScore | number>;
     candidateScores: Record<string, number>;
+    isExport?: boolean;
 }
 
 const AXIS_LABELS: Record<string, string> = {
@@ -42,7 +43,7 @@ const AXIS_LABELS: Record<string, string> = {
     international: 'International',
 };
 
-export default function RadarChart({ userScores, candidateScores }: RadarChartProps) {
+export default function RadarChart({ userScores, candidateScores, isExport = false }: RadarChartProps) {
     const axes = Object.keys(AXIS_LABELS);
 
     const data: ChartData<'radar'> = {
@@ -57,28 +58,14 @@ export default function RadarChart({ userScores, candidateScores }: RadarChartPr
                     }
                     return val || 0;
                 }),
-                backgroundColor: 'rgba(0, 0, 145, 0.2)',
+                backgroundColor: 'rgba(0, 0, 145, 0.25)',
                 borderColor: '#000091',
-                borderWidth: 3,
+                borderWidth: isExport ? 6 : 4,
                 pointBackgroundColor: '#000091',
                 pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#000091',
+                pointRadius: isExport ? 6 : 4,
                 fill: true,
-            },
-            {
-                label: 'Candidat Matché',
-                data: axes.map(axis => candidateScores[axis] || 0),
-                backgroundColor: 'rgba(225, 0, 15, 0.05)',
-                borderColor: '#E1000F',
-                borderWidth: 2,
-                borderDash: [5, 5],
-                pointBackgroundColor: '#E1000F',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#E1000F',
-                fill: true,
-            },
+            }
         ],
     };
 
@@ -87,10 +74,12 @@ export default function RadarChart({ userScores, candidateScores }: RadarChartPr
             r: {
                 angleLines: {
                     display: true,
-                    color: 'rgba(0,0,0,0.05)',
+                    color: 'rgba(0,0,0,0.08)',
+                    lineWidth: isExport ? 2 : 1.5,
                 },
                 grid: {
-                    color: 'rgba(0,0,0,0.05)',
+                    color: 'rgba(0,0,0,0.08)',
+                    lineWidth: isExport ? 2 : 1.5,
                 },
                 suggestedMin: -1,
                 suggestedMax: 1,
@@ -100,11 +89,15 @@ export default function RadarChart({ userScores, candidateScores }: RadarChartPr
                 },
                 pointLabels: {
                     font: {
-                        size: 11,
+                        size: isExport ? 28 : (typeof window !== 'undefined' && window.innerWidth < 768 ? 10 : 14),
                         weight: 'bold',
-                        family: 'Arial',
+                        family: 'inherit',
                     },
                     color: '#1D1D1F',
+                    padding: isExport ? 25 : 15,
+                    backdropColor: 'rgba(255,255,255,0.8)',
+                    backdropPadding: 4,
+                    borderRadius: 4,
                 }
             },
         },
@@ -114,14 +107,31 @@ export default function RadarChart({ userScores, candidateScores }: RadarChartPr
             },
             tooltip: {
                 enabled: true,
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#000091',
+                bodyColor: '#1D1D1F',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                padding: 12,
+                boxPadding: 6,
+                usePointStyle: true,
+                callbacks: {
+                    label: (context) => {
+                        const val = context.raw as number;
+                        return `${context.dataset.label}: ${val.toFixed(2)}`;
+                    }
+                }
             }
         },
         maintainAspectRatio: false,
     };
 
     return (
-        <div className="w-full h-[350px] md:h-[450px] flex items-center justify-center p-4 bg-white rounded-[2rem] border border-border/50">
-            <Radar data={data} options={options} />
+        <div className="w-full h-full flex items-center justify-center">
+            <Radar
+                data={data}
+                options={options}
+            />
         </div>
     );
 }

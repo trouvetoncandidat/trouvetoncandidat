@@ -3,12 +3,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { calculateMatches, generateIdealCandidate, getPoliticalProfile, MatchResult, IdealMeasure } from '@/lib/matchAlgorithm';
-import { PoliticalAxis, WeightedScore } from '@/lib/constants';
+import { PoliticalAxis, WeightedScore, AXIS_EXTREMES } from '@/lib/constants';
 import CandidateCard from '@/components/CandidateCard';
 import IdealCandidateCard from '@/components/IdealCandidateCard';
 import StoryExportCard from '@/components/StoryExportCard';
-import { Share2, RefreshCw, AlertCircle, Home, Sparkles, Download, Heart, Coffee, ShieldCheck, Target, MessageCircle, Send, BarChart3, Fingerprint, Award } from 'lucide-react';
+import TopBanner from '@/components/TopBanner';
+import { Share2, RefreshCw, BarChart3, Target, Sparkles, AlertCircle, Database, Zap, Search, Award, ShieldCheck, ChevronRight, Dna } from 'lucide-react';
 import RadarChart from '@/components/RadarChart';
+import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { toBlob } from 'html-to-image';
 
@@ -21,27 +23,30 @@ export default function ResultsPage() {
     const [error, setError] = useState<string | null>(null);
     const [userScores, setUserScores] = useState<Record<string, WeightedScore>>({});
 
-    // 4 Refs for 4 different exports
     const refIdentity = useRef<HTMLDivElement>(null);
     const refMatch = useRef<HTMLDivElement>(null);
     const refRadar = useRef<HTMLDivElement>(null);
     const refIdeal = useRef<HTMLDivElement>(null);
 
     const [showTheatricalLoading, setShowTheatricalLoading] = useState(true);
-    const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+    const [loadingStep, setLoadingStep] = useState(0);
+    const [staggeredStep, setStaggeredStep] = useState(0);
 
-    const loadingMessages = [
-        "Analyse de vos réponses...",
-        "Calcul des affinités sur les 10 axes thématiques...",
-        "Comparaison avec 1200 pages de programmes officiels...",
-        "Génération de votre profil citoyen...",
-        "Finalisation de votre match idéal..."
+    const theatricalSteps = [
+        { icon: <Database size={24} />, text: "Analyse des réponses citoyennes...", color: "text-[#000091]" },
+        { icon: <Search size={24} />, text: "Scan des 1200 pages de programmes officiels...", color: "text-[#000091]" },
+        { icon: <Zap size={24} />, text: "Calcul des affinités sur les 10 axes...", color: "text-[#E1000F]" },
+        { icon: <ShieldCheck size={24} />, text: "Vérification de la neutralité algorithmique...", color: "text-green-600" },
+        { icon: <Award size={24} />, text: "Génération de votre ADN politique...", color: "text-[#FFD700]" }
     ];
 
     useEffect(() => {
-        const messageInterval = setInterval(() => {
-            setLoadingMessageIndex(prev => (prev + 1) % loadingMessages.length);
-        }, 800);
+        const stepInterval = setInterval(() => {
+            setLoadingStep(prev => {
+                if (prev < theatricalSteps.length - 1) return prev + 1;
+                return prev;
+            });
+        }, 1200);
 
         async function loadAndCalculate() {
             try {
@@ -75,7 +80,12 @@ export default function ResultsPage() {
                 setTimeout(() => {
                     setShowTheatricalLoading(false);
                     setLoading(false);
-                }, 3000);
+                    // Start staggered entry sequence
+                    setTimeout(() => setStaggeredStep(1), 300);
+                    setTimeout(() => setStaggeredStep(2), 800);
+                    setTimeout(() => setStaggeredStep(3), 1300);
+                    setTimeout(() => setStaggeredStep(4), 1800);
+                }, 6500);
 
             } catch (err) {
                 setError("Une erreur est survenue lors du calcul.");
@@ -84,7 +94,7 @@ export default function ResultsPage() {
             }
         }
         loadAndCalculate();
-        return () => clearInterval(messageInterval);
+        return () => clearInterval(stepInterval);
     }, []);
 
     const handleShareImage = async (type: 'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL') => {
@@ -94,180 +104,179 @@ export default function ResultsPage() {
 
         setExportingType(type);
         try {
-            const blob = await toBlob(ref.current, {
-                cacheBust: true,
-                width: 1080,
-                height: 1920,
-                pixelRatio: 2
-            });
-
+            const blob = await toBlob(ref.current, { cacheBust: true, width: 1080, height: 1920, pixelRatio: 2 });
             if (!blob) throw new Error("Génération échouée");
 
-            const titlesMap = { IDENTITY: 'Identité', MATCH: 'Match', RADAR: 'ADN', IDEAL: 'Utopie' };
+            const titlesMap = { IDENTITY: 'Identité', MATCH: 'Match', RADAR: 'ADN', IDEAL: 'Gouvernement' };
             const fileName = `trouvetoncandidat-${type.toLowerCase()}.png`;
             const file = new File([blob], fileName, { type: 'image/png' });
 
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: `TrouveTonCandidat - ${titlesMap[type]}`,
-                    text: 'Découvrez mon profil politique pour 2027 ! 🗳️🇫🇷',
-                });
+                await navigator.share({ files: [file], title: `TrouveTonCandidat - ${titlesMap[type]}`, text: 'Découvrez mon profil politique pour 2027 ! 🗳️🇫🇷' });
             } else {
                 const dataUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.download = fileName;
-                link.href = dataUrl;
-                link.click();
-                URL.revokeObjectURL(dataUrl);
+                link.download = fileName; link.href = dataUrl; link.click(); URL.revokeObjectURL(dataUrl);
             }
-        } catch (err) {
-            console.error('Export error:', err);
-        } finally {
-            setExportingType(null);
-        }
-    };
-
-    const handleInviteFriend = async () => {
-        const text = "🗳️🇫🇷 Découvre ton match politique sur TrouveTonCandidat.fr ! C'est neutre, gratuit et anonyme.";
-        const url = 'https://trouvetoncandidat.fr';
-        if (navigator.share) {
-            await navigator.share({ title: 'TrouveTonCandidat.fr', text: text, url: url });
-        } else {
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
-        }
+        } catch (err) { console.error('Export error:', err); } finally { setExportingType(null); }
     };
 
     return (
         <AnimatePresence mode="wait">
             {showTheatricalLoading ? (
-                <motion.div
-                    key="loader"
-                    exit={{ opacity: 0, scale: 1.05 }}
-                    className="min-h-screen bg-white fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 space-y-12 overflow-hidden w-full"
-                >
-                    <div className="relative flex items-center justify-center">
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                            className="w-32 h-32 md:w-48 md:h-48 rounded-full border-8 border-transparent border-t-[#000091] border-r-white border-b-[#E1000F] shadow-2xl"
-                        />
-                        <div className="absolute"><Sparkles size={40} className="text-secondary animate-pulse" /></div>
-                    </div>
-                    <div className="flex flex-col items-center gap-6 max-w-sm w-full text-center">
-                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <motion.div initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 3 }} className="h-full bg-primary" />
+                <div className="min-h-screen bg-white relative flex flex-col">
+                    <TopBanner />
+                    <motion.div key="loader" exit={{ opacity: 0, scale: 1.05 }} className="flex-1 flex flex-col items-center justify-center p-6 space-y-12 overflow-hidden w-full pt-32">
+                        <div className="relative flex items-center justify-center scale-110">
+                            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 2, repeat: Infinity }} className="absolute w-40 h-40 md:w-60 md:h-60 bg-primary/5 rounded-full blur-3xl text-primary" />
+                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-32 h-32 md:w-52 md:h-52 rounded-full border border-dashed border-primary/20" />
+                            <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute w-40 h-40 md:w-64 md:h-64 rounded-full border border-dashed border-secondary/10" />
+                            <svg className="absolute w-36 h-36 md:w-48 md:h-48 rotate-[-90deg]">
+                                <circle cx="50%" cy="50%" r="45%" fill="transparent" stroke="rgba(0,0,145,0.05)" strokeWidth="6" />
+                                <motion.circle cx="50%" cy="50%" r="45%" fill="transparent" stroke="#000091" strokeWidth="6" strokeDasharray="100 100" initial={{ strokeDashoffset: 100 }} animate={{ strokeDashoffset: 100 - (loadingStep + 1) * 20 }} transition={{ duration: 1 }} strokeLinecap="round" />
+                            </svg>
+                            <div className="absolute flex items-center justify-center">
+                                <AnimatePresence mode="wait">
+                                    <motion.div key={loadingStep} initial={{ opacity: 0, scale: 0.5, rotate: -20 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={{ opacity: 0, scale: 1.5, rotate: 20 }} className={`${theatricalSteps[loadingStep].color}`}>{theatricalSteps[loadingStep].icon}</motion.div>
+                                </AnimatePresence>
+                            </div>
                         </div>
-                        <p className="text-sm font-black uppercase tracking-widest text-[#1D1D1F]/60">
-                            {loadingMessages[loadingMessageIndex]}
-                        </p>
-                    </div>
-                </motion.div>
+                        <div className="flex flex-col items-center gap-8 max-w-sm w-full text-center">
+                            <div className="space-y-4 w-full">
+                                <AnimatePresence mode="wait">
+                                    <motion.p key={loadingStep} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="text-sm font-black uppercase tracking-widest text-[#1D1D1F]">{theatricalSteps[loadingStep].text}</motion.p>
+                                </AnimatePresence>
+                                <p className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.3em]">Phase {loadingStep + 1} / {theatricalSteps.length}</p>
+                            </div>
+                            <div className="flex gap-1.5 h-1">
+                                {[0, 1, 2, 3, 4].map(i => (
+                                    <motion.div key={i} animate={{ height: [4, i === loadingStep ? 12 : 4, 4], backgroundColor: i <= loadingStep ? '#000091' : '#E5E5E5' }} transition={{ duration: 0.6, repeat: i === loadingStep ? Infinity : 0 }} className="w-8 rounded-full shadow-sm" />
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                    <Footer />
+                </div>
             ) : error ? (
                 <div className="min-h-screen flex flex-col items-center justify-center p-6 space-y-6">
                     <AlertCircle className="text-secondary" size={64} />
-                    <h2 className="text-2xl font-black">{error}</h2>
-                    <Link href="/" className="px-8 py-4 bg-primary text-white rounded-full font-bold">Retour</Link>
+                    <h2 className="text-2xl font-black uppercase tracking-tighter">{error}</h2>
+                    <Link href="/" className="px-8 py-4 bg-primary text-white rounded-2xl font-black uppercase tracking-widest shadow-xl">Retour à l'accueil</Link>
                 </div>
             ) : (
-                <motion.main
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="min-h-screen bg-[#F8F9FA] pb-32 w-full"
-                >
-                    {/* HIDDEN STORY CARDS FOR 4 TYPES OF EXPORTS */}
-                    <div className="fixed left-[-9999px] top-0 pointer-events-none">
-                        <div ref={refIdentity}><StoryExportCard type="IDENTITY" profileBadge={profileBadge} userScores={userScores} /></div>
-                        <div ref={refMatch}><StoryExportCard type="MATCH" topMatchName={results[0]?.candidate.name} topMatchPercent={results[0]?.globalMatch} profileBadge={profileBadge} userScores={userScores} /></div>
-                        <div ref={refRadar}><StoryExportCard type="RADAR" topMatchName={results[0]?.candidate.name} userScores={userScores} candidateScores={results[0]?.candidate.scores} profileBadge={profileBadge} /></div>
-                        <div ref={refIdeal}><StoryExportCard type="IDEAL" measures={idealMeasures} userScores={userScores} profileBadge={profileBadge} /></div>
+                <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[#F8F9FA] flex flex-col w-full pt-20 relative overflow-hidden">
+                    {/* Background Decorative Elements */}
+                    <div className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-20">
+                        <div className="absolute top-[10%] left-[5%] w-96 h-96 bg-primary/20 blur-[120px] rounded-full animate-float" />
+                        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-secondary/10 blur-[150px] rounded-full animate-float" style={{ animationDelay: '2s' }} />
                     </div>
 
-                    {/* TOP NAVIGATION / HEADER */}
-                    <div className="fixed top-0 left-0 w-full z-50">
-                        <div className="w-full h-1.5 flex"><div className="flex-1 bg-[#000091]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#E1000F]" /></div>
-                        <div className="w-full bg-white/80 backdrop-blur-md py-3 px-6 flex justify-between items-center shadow-sm">
-                            <div className="flex items-center gap-2 text-primary">
-                                <Fingerprint size={20} />
-                                <span className="font-black text-sm uppercase tracking-tighter">TrouveTonCandidat.fr</span>
-                            </div>
-                            <button onClick={handleInviteFriend} className="text-[10px] font-black uppercase tracking-widest text-primary/60 border border-primary/20 px-3 py-1 rounded-full flex items-center gap-2">
-                                <Heart size={10} className="fill-primary/20" /> Inviter un ami
-                            </button>
+                    <TopBanner />
+
+                    {/* HIDDEN EXPORT CARDS */}
+                    <div className="fixed left-[-9999px] top-0 pointer-events-none overflow-hidden text-black">
+                        <div ref={refIdentity} className="w-[1080px] h-[1920px]"><StoryExportCard type="IDENTITY" profileBadge={profileBadge} userScores={userScores} /></div>
+                        <div ref={refMatch} className="w-[1080px] h-[1920px]"><StoryExportCard type="MATCH" topMatchName={results[0]?.candidate.name} topMatchPercent={results[0]?.globalMatch} profileBadge={profileBadge} userScores={userScores} /></div>
+                        <div ref={refRadar} className="w-[1080px] h-[1920px]"><StoryExportCard type="RADAR" userScores={userScores} profileBadge={profileBadge} topMatchName={results[0]?.candidate.name} candidateScores={results[0]?.candidate.scores} /></div>
+                        <div ref={refIdeal} className="w-[1080px] h-[1920px]"><StoryExportCard type="IDEAL" measures={idealMeasures} profileBadge={profileBadge} userScores={userScores} /></div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto px-4 py-4 md:py-8 space-y-16 md:space-y-24 relative z-10">
+
+                        {/* 1. Profil (StaggeredStep >= 1) */}
+                        <AnimatePresence>
+                            {staggeredStep >= 1 && (
+                                <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-3xl mx-auto w-full space-y-6 text-center">
+                                    <div className="flex flex-col items-center gap-4 relative">
+                                        <button onClick={() => handleShareImage('IDENTITY')} className="absolute top-4 right-4 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-primary border border-primary/10 flex items-center gap-2 group">
+                                            {exportingType === 'IDENTITY' ? <RefreshCw className="animate-spin" size={12} /> : <Share2 className="transition-transform" size={12} />}
+                                            <span className="text-[10px] font-[900] uppercase tracking-widest">Partager</span>
+                                        </button>
+                                        <div className="collectible-card glass-morphism rounded-[2.5rem] p-10 md:p-14 border-2 border-primary/10 space-y-6 flex flex-col items-center text-center overflow-hidden w-full relative">
+                                            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-white to-secondary opacity-40" />
+                                            {/* Decorative Background Glow */}
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/5 blur-[100px] rounded-full -z-10" />
+
+                                            <div className="space-y-4">
+                                                <span className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] inline-block mb-2">
+                                                    {profileBadge.title}
+                                                </span>
+                                                <h1 className="text-3xl md:text-5xl font-[1000] tracking-tighter uppercase leading-[0.9] glow-text-primary px-4 max-w-2xl mx-auto">
+                                                    {profileBadge.subtitle}
+                                                </h1>
+                                                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/20 to-transparent mx-auto mt-6" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.section>
+                            )}
+                        </AnimatePresence>
+
+                        {/* 2. Le Match (StaggeredStep >= 2) */}
+                        <AnimatePresence>
+                            {staggeredStep >= 2 && (
+                                <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-4xl mx-auto w-full space-y-6 relative">
+                                    <button onClick={() => handleShareImage('MATCH')} className="absolute top-6 right-6 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-primary border border-primary/10 flex items-center gap-2 group">
+                                        {exportingType === 'MATCH' ? <RefreshCw className="animate-spin" size={12} /> : <Share2 className="transition-transform" size={12} />}
+                                        <span className="text-[10px] font-[900] uppercase tracking-widest">Partager</span>
+                                    </button>
+                                    <div className="w-full">
+                                        {results[0] && <CandidateCard result={results[0]} rank={1} />}
+                                    </div>
+                                </motion.section>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Grid for Radar & Ideal Candidate */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                            {/* 3. Ma Cartographie (StaggeredStep >= 3) */}
+                            <AnimatePresence>
+                                {staggeredStep >= 3 && (
+                                    <motion.section initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} className="space-y-6 glass-morphism rounded-[2.5rem] p-10 md:p-12 shadow-xl border border-primary/10 relative overflow-hidden h-full flex flex-col">
+                                        <button onClick={() => handleShareImage('RADAR')} className="absolute top-6 right-6 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-primary border border-primary/10 flex items-center gap-2 group">
+                                            {exportingType === 'RADAR' ? <RefreshCw className="animate-spin" size={12} /> : <Share2 className="transition-transform" size={12} />}
+                                            <span className="text-[10px] font-[900] uppercase tracking-widest">Partager</span>
+                                        </button>
+
+                                        <div className="space-y-3 mb-8 text-center">
+                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-full text-[9px] font-black uppercase tracking-widest text-primary/60 border border-primary/10">
+                                                Analyse Dimensionnelle
+                                            </span>
+                                            <h3 className="text-2xl md:text-4xl font-[1000] uppercase tracking-tighter glow-text-primary leading-none">
+                                                ADN <span className="text-primary">Individuel</span>
+                                            </h3>
+                                        </div>
+
+                                        <div className="flex items-center justify-center flex-1 w-full relative min-h-[400px]">
+                                            {/* Radar Core Glow */}
+                                            <div className="absolute w-64 h-64 bg-primary/5 blur-[80px] rounded-full" />
+                                            <div className="w-full max-w-sm aspect-square relative z-20">
+                                                <RadarChart userScores={userScores} candidateScores={results[0]?.candidate.scores || {}} />
+                                            </div>
+                                        </div>
+                                    </motion.section>
+                                )}
+                            </AnimatePresence>
+
+                            {/* 4. Mon Candidat Idéal (StaggeredStep >= 4) */}
+                            <AnimatePresence>
+                                {staggeredStep >= 4 && (
+                                    <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="relative h-full">
+                                        <button onClick={() => handleShareImage('IDEAL')} className="absolute top-6 right-6 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-secondary border border-secondary/10 flex items-center gap-2 group">
+                                            {exportingType === 'IDEAL' ? <RefreshCw className="animate-spin" size={12} /> : <Share2 className="transition-transform" size={12} />}
+                                            <span className="text-[10px] font-[900] uppercase tracking-widest">Partager</span>
+                                        </button>
+                                        <div className="h-full">
+                                            <IdealCandidateCard measures={idealMeasures} />
+                                        </div>
+                                    </motion.section>
+                                )}
+                            </AnimatePresence>
                         </div>
-                    </div>
-
-                    <div className="max-w-xl mx-auto px-6 pt-24 space-y-6">
-
-                        {/* SECTION 1: IDENTITY */}
-                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 01 • Identité</h2>
-                                <button onClick={() => handleShareImage('IDENTITY')} className="p-2 text-primary/40 hover:text-primary transition-colors">
-                                    {exportingType === 'IDENTITY' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
-                                </button>
-                            </div>
-                            <div className="text-center space-y-2">
-                                <div className="inline-flex items-center justify-center p-4 bg-primary/5 rounded-full mb-2">
-                                    <Award className="text-primary" size={32} />
-                                </div>
-                                <h3 className="text-4xl font-black tracking-tighter">{profileBadge.title}</h3>
-                                <p className="text-sm font-medium text-foreground/50 leading-tight">{profileBadge.subtitle}</p>
-                            </div>
-                        </section>
-
-                        {/* SECTION 2: TOP MATCH */}
-                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 02 • Votre Match</h2>
-                                <button onClick={() => handleShareImage('MATCH')} className="p-2 text-primary/40 hover:text-primary transition-colors">
-                                    {exportingType === 'MATCH' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
-                                </button>
-                            </div>
-                            {results[0] && <CandidateCard result={results[0]} rank={1} />}
-                        </section>
-
-                        {/* SECTION 3: ANALYSE RADAR */}
-                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 03 • Analyse ADN</h2>
-                                <button onClick={() => handleShareImage('RADAR')} className="p-2 text-primary/40 hover:text-primary transition-colors">
-                                    {exportingType === 'RADAR' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
-                                </button>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="h-[300px] w-full">
-                                    <RadarChart userScores={userScores} candidateScores={results[0]?.candidate.scores || {}} />
-                                </div>
-                                <div className="flex justify-center gap-6">
-                                    <div className="flex items-center gap-2"><div className="w-2 h-2 bg-[#000091] rounded-full" /><span className="text-[9px] font-black uppercase text-primary/40">Vous</span></div>
-                                    <div className="flex items-center gap-2"><div className="w-2 h-2 bg-[#E1000F] border border-dashed border-[#E1000F] rounded-full" /><span className="text-[9px] font-black uppercase text-secondary/40">{results[0]?.candidate.name}</span></div>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* SECTION 4: MON UTOPIE */}
-                        <section className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-[10px] font-black text-primary/40 uppercase tracking-[0.4em]">Section 04 • Mon Utopie</h2>
-                                <button onClick={() => handleShareImage('IDEAL')} className="p-2 text-primary/40 hover:text-primary transition-colors">
-                                    {exportingType === 'IDEAL' ? <RefreshCw className="animate-spin" size={18} /> : <Share2 size={18} />}
-                                </button>
-                            </div>
-                            {idealMeasures.length > 0 && <IdealCandidateCard measures={idealMeasures} />}
-                        </section>
-
-                        {/* FINAL ACTIONS */}
-                        <div className="pt-8 space-y-4">
-                            <Link href="/" className="w-full h-16 bg-white border-2 border-border rounded-2xl flex items-center justify-center gap-3 font-black text-foreground/40 active:scale-95 transition-all">
-                                <Home size={20} /> Recommencer le test
-                            </Link>
-                            <a href="https://buymeacoffee.com/trouvetoncandidat" target="_blank" className="w-full h-16 bg-[#FFDD00] rounded-2xl flex items-center justify-center gap-3 font-black text-[#1D1D1F] active:scale-95 transition-all shadow-md">
-                                <Coffee size={20} /> Soutenir avec un café
-                            </a>
-                        </div>
 
                     </div>
+
+                    <Footer />
                 </motion.main>
             )}
         </AnimatePresence>

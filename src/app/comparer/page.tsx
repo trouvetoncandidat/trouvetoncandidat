@@ -4,10 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Candidate, AXIS_EXTREMES } from '@/lib/constants';
 import HemicycleGauge from '@/components/HemicycleGauge';
-import { Share2, RefreshCw, ArrowLeftRight, Fingerprint, Info, Target, Home, Check, ExternalLink, ShieldCheck } from 'lucide-react';
+import { ArrowLeftRight, User, Home, ArrowRight, Share2, Info, ChevronRight, X, ExternalLink, RefreshCw, Target, Check, ShieldCheck } from 'lucide-react';
+import TopBanner from '@/components/TopBanner';
 import Link from 'next/link';
 import StoryExportCard from '@/components/StoryExportCard';
 import { toBlob } from 'html-to-image';
+import Footer from '@/components/Footer';
 
 export default function ComparePage() {
     const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -119,28 +121,7 @@ export default function ComparePage() {
                 </div>
             </div>
 
-            {/* Header */}
-            <div className="fixed top-0 left-0 w-full z-50">
-                <div className="w-full h-1.5 flex"><div className="flex-1 bg-[#000091]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#E1000F]" /></div>
-                <div className="w-full bg-white/80 backdrop-blur-md py-3 px-6 flex justify-between items-center shadow-sm">
-                    <Link href="/" className="flex items-center gap-2 text-primary">
-                        <Fingerprint size={20} />
-                        <span className="font-black text-sm uppercase tracking-tighter">TrouveTonCandidat.fr</span>
-                    </Link>
-                    {comparisonMode ? (
-                        <button
-                            onClick={() => setComparisonMode(false)}
-                            className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2"
-                        >
-                            <ArrowLeftRight size={14} /> Changer
-                        </button>
-                    ) : (
-                        <Link href="/" className="p-2 text-foreground/40 hover:text-foreground">
-                            <Home size={20} />
-                        </Link>
-                    )}
-                </div>
-            </div>
+            <TopBanner />
 
             <AnimatePresence mode="wait">
                 {!comparisonMode ? (
@@ -149,10 +130,10 @@ export default function ComparePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="max-w-4xl mx-auto px-6 pt-24 space-y-8"
+                        className="max-w-4xl mx-auto px-6 pt-32 md:pt-40 space-y-6 md:space-y-8"
                     >
                         <div className="text-center space-y-4">
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
+                            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground px-2">
                                 Choisissez <span className="text-primary">2 candidats</span> <br /> pour le duel.
                             </h1>
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/50 rounded-full text-primary/60 font-black text-[9px] uppercase tracking-widest border border-primary/5">
@@ -180,7 +161,7 @@ export default function ComparePage() {
                                         key={candidate.id}
                                         whileHover={{ scale: 1.02 }}
                                         onClick={() => handleSelectCandidate(candidate.id)}
-                                        className={`relative flex flex-col items-start p-8 rounded-[2.5rem] text-left transition-all border-4 cursor-pointer ${isSelected
+                                        className={`relative flex flex-col items-start p-6 md:p-8 rounded-[2.5rem] text-left transition-all border-4 cursor-pointer ${isSelected
                                             ? isFirstSelected ? 'border-[#000091] bg-white shadow-xl' : 'border-[#E1000F] bg-white shadow-xl'
                                             : 'border-transparent bg-white shadow-sm hover:shadow-md'
                                             }`}
@@ -282,18 +263,18 @@ export default function ComparePage() {
                         key="comparison"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="max-w-4xl mx-auto px-6 pt-24 space-y-8"
+                        className="max-w-4xl mx-auto px-6 pt-32 md:pt-40 space-y-8"
                     >
                         {/* Selected Candidates Header */}
-                        <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-border/40 flex items-center justify-between gap-4">
-                            <div className="flex-1 text-center">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-[#000091] mb-1">Candidat A</p>
-                                <h3 className="font-black tracking-tight truncate">{candA?.name}</h3>
+                        <div className="bg-white rounded-[2.5rem] p-5 md:p-8 shadow-sm border border-border/40 flex items-center justify-between gap-2 md:gap-4">
+                            <div className="flex-1 text-center min-w-0">
+                                <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[#000091] mb-1">Candidat A</p>
+                                <h3 className="font-black tracking-tight text-sm md:text-base truncate">{candA?.name}</h3>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 font-black text-xs shrink-0">VS</div>
-                            <div className="flex-1 text-center">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-[#E1000F] mb-1">Candidat B</p>
-                                <h3 className="font-black tracking-tight truncate">{candB?.name}</h3>
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 font-black text-[9px] md:text-xs shrink-0">VS</div>
+                            <div className="flex-1 text-center min-w-0">
+                                <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-[#E1000F] mb-1">Candidat B</p>
+                                <h3 className="font-black tracking-tight text-sm md:text-base truncate">{candB?.name}</h3>
                             </div>
                         </div>
 
@@ -301,14 +282,14 @@ export default function ComparePage() {
                         <motion.div
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            className="bg-[#000091] text-white rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden text-center"
+                            className="bg-[#000091] text-white rounded-[2.5rem] p-6 md:p-8 shadow-xl relative overflow-hidden text-center"
                         >
                             <div className="absolute top-0 right-0 p-4 opacity-5">
                                 <Target size={120} />
                             </div>
                             <p className="text-xs font-black uppercase tracking-[0.4em] opacity-60 mb-2">Indice de Convergence</p>
-                            <div className="text-6xl font-black tracking-tighter mb-1">{proximity}%</div>
-                            <p className="text-sm font-medium opacity-80">de proximité de programme</p>
+                            <div className="text-5xl md:text-6xl font-black tracking-tighter mb-1">{proximity}%</div>
+                            <p className="text-xs md:text-sm font-medium opacity-80">de proximité de programme</p>
 
                             <button
                                 onClick={handleShare}
@@ -346,6 +327,7 @@ export default function ComparePage() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <Footer />
         </main>
     );
 }

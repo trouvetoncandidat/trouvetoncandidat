@@ -79,8 +79,6 @@ export function generateIdealCandidate(
         const polAxis = axis as PoliticalAxis;
         const { score: userScore } = weightedUserScore;
 
-        if (userScore === 0) continue;
-
         let bestMeasure: IdealMeasure | null = null;
         let minDiff = Infinity;
 

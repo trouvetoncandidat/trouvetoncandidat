@@ -28,11 +28,12 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
     const q = ALL_QUESTIONS[currentIndex];
     const progress = ((currentIndex + 1) / ALL_QUESTIONS.length) * 100;
 
-    // Body scroll lock to prevent elastic bounce on mobile
+    // Body scroll lock removed to allow Footer to be reached if needed, 
+    // but the component itself is designed as a Flex layout.
     useEffect(() => {
         const originalStyle = window.getComputedStyle(document.body).overflow;
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+        // document.body.style.overflow = 'hidden';
+        // document.documentElement.style.overflow = 'hidden';
         return () => {
             document.body.style.overflow = originalStyle;
             document.documentElement.style.overflow = 'auto';
@@ -45,12 +46,10 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
 
         if (currentIndex < ALL_QUESTIONS.length - 1) {
             setDirection(1);
-            // Slight delay before moving to next question for visual confirmation
             setTimeout(() => {
                 setCurrentIndex(prev => prev + 1);
             }, 100);
         } else {
-            // Questionnaire finished
             const aggregated: Record<string, number> = {};
             const weightsAggregated: Record<string, number> = {};
             const counts: Record<string, number> = {};
@@ -62,7 +61,6 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                     const axis = questionData.axis;
                     aggregated[axis] = (aggregated[axis] || 0) + actualValue;
 
-                    // NEW WEIGHT LOGIC (Detection d'intensité)
                     let weight = 0.5;
                     const absVal = Math.abs(val);
                     if (absVal === 1) weight = 2;
@@ -95,9 +93,9 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
     };
 
     return (
-        <div className="fixed inset-0 bg-white flex flex-col items-center justify-between h-[100dvh] overflow-hidden select-none">
+        <div className="flex flex-col items-center justify-between w-full min-h-[70vh] select-none">
             {/* 1. TOP SECTION: Progress & Theme Context */}
-            <div className="w-full max-w-xl px-6 pt-6 md:pt-10 space-y-4">
+            <div className="w-full max-w-xl px-6 pt-2 md:pt-4 space-y-4">
                 <div className="flex items-center justify-between h-10">
                     <button
                         onClick={handleBack}
@@ -107,10 +105,10 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                         <ChevronLeft size={24} />
                     </button>
                     <div className="text-center">
-                        <p className="text-[10px] font-black text-[#000091] uppercase tracking-[0.4em] mb-0.5">
+                        <p className="text-lg font-black text-[#000091] uppercase tracking-[0.2em] mb-0.5">
                             {q.theme}
                         </p>
-                        <p className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
+                        <p className="text-[11px] font-bold text-foreground/30 uppercase tracking-widest">
                             Question {currentIndex + 1} sur {ALL_QUESTIONS.length}
                         </p>
                     </div>
@@ -128,8 +126,8 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                 </div>
             </div>
 
-            {/* 2. CENTER SECTION: The Question (Dynamic Sizing) */}
-            <div className="flex-1 w-full flex items-center justify-center px-6 relative">
+            {/* 2. CENTER SECTION: The Question */}
+            <div className="flex-1 w-full flex items-center justify-center px-6 py-8 relative min-h-[160px]">
                 <AnimatePresence mode="wait" initial={false} custom={direction}>
                     <motion.div
                         key={currentIndex}
@@ -146,8 +144,8 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                         className="w-full max-w-2xl text-center"
                     >
                         <h1
-                            className={`font-black tracking-tighter text-foreground leading-[1.05] md:text-5xl
-                                ${q.text.length > 120 ? 'text-xl' : q.text.length > 80 ? 'text-2xl' : q.text.length > 50 ? 'text-3xl' : 'text-4xl'}
+                            className={`font-black tracking-tighter text-foreground leading-[1.1] md:text-4xl
+                                ${q.text.length > 120 ? 'text-lg' : q.text.length > 80 ? 'text-xl' : q.text.length > 50 ? 'text-2xl' : 'text-3xl'}
                             `}
                         >
                             {q.text}
@@ -156,8 +154,8 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                 </AnimatePresence>
             </div>
 
-            {/* 3. BOTTOM SECTION: The Thumb-Zone (5 Buttons) */}
-            <div className="w-full max-w-xl px-6 pb-8 md:pb-12 space-y-4">
+            {/* 3. BOTTOM SECTION: The Thumb-Zone */}
+            <div className="w-full max-w-xl px-6 pb-4 space-y-4">
                 <div className="flex flex-col gap-2.5">
                     {CHOICE_VALUES.map((choice) => {
                         const isSelected = answers[q.id] === choice.value;
@@ -178,14 +176,10 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                     })}
                 </div>
 
-                {/* Footer Safe Zone Notification */}
                 <div className="flex items-center justify-center gap-2 text-foreground/20">
                     <CheckCircle2 size={12} />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Données locales • Anonymat total</span>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Anonymat total</span>
                 </div>
-
-                {/* Spacer for iOS home indicator */}
-                <div className="h-4 md:h-0" />
             </div>
         </div>
     );

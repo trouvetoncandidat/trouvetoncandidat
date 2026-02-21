@@ -2,211 +2,351 @@
     {
         "id": "q1",
         "theme": "Économie",
-        "text": "Faut-il rétablir un impôt sur la fortune pour taxer davantage ceux qui possèdent un très gros patrimoine (maisons, placements) ?",
+        "text": "Faut-il remettre l'ISF (impôt sur la fortune) pour taxer plus lourdement ceux qui ont beaucoup d'argent et de maisons ?",
         "axis": "economie",
         "reversed": true
     },
     {
         "id": "q2",
         "theme": "Économie",
-        "text": "Faut-il empêcher les grandes entreprises de verser de l'argent à leurs actionnaires si elles reçoivent des aides financières de l'État ?",
+        "text": "Faut-il baisser les impôts que payent les entreprises pour les aider à créer plus d'usines et d'emplois en France ?",
         "axis": "economie",
-        "reversed": true
+        "reversed": false
     },
     {
         "id": "q3",
         "theme": "Économie",
-        "text": "Faut-il baisser les impôts payés par les entreprises et les usines pour les aider à produire davantage en France ?",
+        "text": "Faut-il interdire aux entreprises de donner de l'argent à leurs actionnaires si elles virent des gens ou reçoivent des aides du pays ?",
+        "axis": "economie",
+        "reversed": true
+    },
+    {
+        "id": "q4",
+        "theme": "Économie",
+        "text": "Faut-il supprimer totalement les impôts sur les heures supplémentaires pour que les gens gagnent plus quand ils travaillent plus ?",
         "axis": "economie",
         "reversed": false
     },
     {
-        "id": "q4",
-        "theme": "Social",
-        "text": "Faut-il limiter le montant total des aides sociales pour qu'une personne qui travaille gagne toujours plus que si elle ne travaillait pas ?",
-        "axis": "social",
-        "reversed": false
-    },
-    {
         "id": "q5",
-        "theme": "Social",
-        "text": "Faut-il donner une somme d'argent fixe tous les mois (environ 1 000 €) à tous les jeunes et aux plus pauvres, sans conditions ?",
-        "axis": "social",
+        "theme": "Économie",
+        "text": "Faut-il que l'Etat fixe un prix maximum pour les courses (nourriture, électricité, essence) pour empêcher que ça augmente trop ?",
+        "axis": "economie",
         "reversed": true
     },
     {
         "id": "q6",
         "theme": "Social",
-        "text": "Faut-il reculer l'âge de départ à la retraite à 64 ans ou plus pour financer le système ?",
+        "text": "Faut-il limiter le total des aides sociales pour être sûr que celui qui travaille touche toujours plus d'argent que celui qui ne travaille pas ?",
         "axis": "social",
         "reversed": false
     },
     {
         "id": "q7",
-        "theme": "Écologie",
-        "text": "Faut-il voter une loi qui interdit de prendre à la nature plus de ressources que ce qu'elle peut produire ?",
-        "axis": "ecologie",
+        "theme": "Social",
+        "text": "Faut-il donner environ 1000 € par mois à tous les jeunes de 18 ans et aux plus pauvres, quoi qu'il arrive ?",
+        "axis": "social",
         "reversed": true
     },
     {
         "id": "q8",
-        "theme": "Écologie",
-        "text": "Faut-il interdire tout de suite les pesticides chimiques (contre les mauvaises herbes ou insectes) et passer à une agriculture 100 % biologique ?",
-        "axis": "ecologie",
-        "reversed": true
-    },
-    {
-        "id": "q9",
-        "theme": "Écologie",
-        "text": "Faut-il supprimer les zones qui interdisent aux voitures anciennes de circuler dans les grandes villes ?",
-        "axis": "ecologie",
+        "theme": "Social",
+        "text": "Faut-il travailler jusqu'à 64 ans ou plus pour que les retraites puissent continuer à être payées demain ?",
+        "axis": "social",
         "reversed": false
     },
     {
+        "id": "q9",
+        "theme": "Social",
+        "text": "Faut-il pouvoir partir à la retraite à 60 ans si on a travaillé pendant 40 ans ?",
+        "axis": "social",
+        "reversed": true
+    },
+    {
         "id": "q10",
-        "theme": "Europe",
-        "text": "Faut-il décider que les lois françaises doivent toujours passer avant les décisions prises par l'Union européenne ?",
-        "axis": "europe",
+        "theme": "Social",
+        "text": "Faut-il couper les aides (allocations) aux parents si leurs enfants font trop de bêtises à l'école ou dans la rue ?",
+        "axis": "social",
         "reversed": false
     },
     {
         "id": "q11",
-        "theme": "Europe",
-        "text": "Faut-il créer de nouveaux impôts européens sur les grandes entreprises mondiales pour financer la protection du climat ?",
-        "axis": "europe",
+        "theme": "Écologie",
+        "text": "Faut-il écrire dans la loi qu'on ne doit pas prendre à la nature plus que ce qu'elle peut nous redonner ?",
+        "axis": "ecologie",
         "reversed": true
     },
     {
         "id": "q12",
-        "theme": "Europe",
-        "text": "La France doit-elle s'opposer aux nouveaux accords de commerce avec les autres pays pour protéger ses propres produits ?",
-        "axis": "europe",
+        "theme": "Écologie",
+        "text": "Faut-il supprimer les zones (ZFE) qui interdisent aux gens de rouler en ville avec des voitures un peu vieilles ?",
+        "axis": "ecologie",
         "reversed": false
     },
     {
         "id": "q13",
-        "theme": "Sécurité",
-        "text": "Faut-il considérer que les policiers sont d'office en état de légitime défense s'ils utilisent leur arme en service ?",
-        "axis": "securite",
-        "reversed": false
+        "theme": "Écologie",
+        "text": "Faut-il interdire tout de suite les produits chimiques comme le glyphosate dans l'agriculture ?",
+        "axis": "ecologie",
+        "reversed": true
     },
     {
         "id": "q14",
-        "theme": "Sécurité",
-        "text": "Faut-il imposer des peines de prison obligatoires et automatiques pour chaque délit grave afin de punir plus sévèrement ?",
-        "axis": "securite",
-        "reversed": false
+        "theme": "Écologie",
+        "text": "Faut-il obliger les cantines des écoles à proposer un repas sans viande tous les jours ?",
+        "axis": "ecologie",
+        "reversed": true
     },
     {
         "id": "q15",
-        "theme": "Sécurité",
-        "text": "Faut-il arrêter d'utiliser certaines armes (comme les grenades ou les lanceurs de balles de défense) pendant les manifestations ?",
-        "axis": "securite",
+        "theme": "Écologie",
+        "text": "Faut-il donner des aides d'argent aux entreprises seulement si elles font de gros efforts pour protéger le climat ?",
+        "axis": "ecologie",
         "reversed": true
     },
     {
         "id": "q16",
-        "theme": "Immigration",
-        "text": "Faut-il supprimer le droit du sol (le fait de devenir Français car on est né en France) pour que seuls les enfants de parents français puissent être français ?",
-        "axis": "immigration",
+        "theme": "Europe",
+        "text": "Faut-il décider que les lois françaises sont toujours plus importantes que les ordres qui viennent de l'Europe ?",
+        "axis": "europe",
         "reversed": false
     },
     {
         "id": "q17",
-        "theme": "Immigration",
-        "text": "Faut-il arrêter de soigner gratuitement les étrangers qui ne sont pas en règle en France (sauf en cas d'urgence absolue) ?",
-        "axis": "immigration",
-        "reversed": false
-    },
-    {
-        "id": "q18",
-        "theme": "Immigration",
-        "text": "Faut-il donner des papiers et régulariser tous les travailleurs étrangers sans-papiers qui travaillent déjà en France ?",
-        "axis": "immigration",
+        "theme": "Europe",
+        "text": "Faut-il créer de nouveaux impôts européens sur les très grosses entreprises (comme Google ou Amazon) pour financer l'écologie ?",
+        "axis": "europe",
         "reversed": true
     },
     {
+        "id": "q18",
+        "theme": "Europe",
+        "text": "Faut-il que la France dise 'non' à tous les nouveaux accords de commerce avec les pays lointains pour protéger nos agriculteurs ?",
+        "axis": "europe",
+        "reversed": false
+    },
+    {
         "id": "q19",
-        "theme": "Services Publics",
-        "text": "Faut-il obliger les médecins à s'installer dans les endroits où il n'y a plus assez de docteurs (les déserts médicaux) ?",
-        "axis": "services_publics",
+        "theme": "Europe",
+        "text": "Faut-il avoir le droit de ne pas appliquer certaines règles de l'Europe si elles empêchent la France de protéger sa nature ou ses travailleurs ?",
+        "axis": "europe",
         "reversed": true
     },
     {
         "id": "q20",
-        "theme": "Services Publics",
-        "text": "Faut-il embaucher beaucoup plus de fonctionnaires (professeurs, soignants, policiers) pour améliorer les services de l'État ?",
-        "axis": "services_publics",
-        "reversed": true
+        "theme": "Europe",
+        "text": "Faut-il obliger l'Etat à acheter en priorité des produits faits par des entreprises françaises ?",
+        "axis": "europe",
+        "reversed": false
     },
     {
         "id": "q21",
-        "theme": "Services Publics",
-        "text": "Faut-il augmenter le nombre de jours non payés quand un fonctionnaire tombe malade pour faire des économies ?",
-        "axis": "services_publics",
+        "theme": "Sécurité",
+        "text": "Faut-il considérer que les policiers sont d'office dans leur bon droit s'ils utilisent leur arme pour se défendre ?",
+        "axis": "securite",
         "reversed": false
     },
     {
         "id": "q22",
-        "theme": "Énergie",
-        "text": "Faut-il fermer toutes les centrales nucléaires et arrêter d'en construire de nouvelles ?",
-        "axis": "energie",
+        "theme": "Sécurité",
+        "text": "Faut-il supprimer les brigades de police BAC et interdire certaines armes (comme les flashballs) dans les manifestations ?",
+        "axis": "securite",
         "reversed": true
     },
     {
         "id": "q23",
-        "theme": "Énergie",
-        "text": "Faut-il lancer la construction de plusieurs nouvelles centrales nucléaires pour produire de l'électricité ?",
-        "axis": "energie",
+        "theme": "Sécurité",
+        "text": "Faut-il obliger les juges à donner des peines de prison minimum pour être sûr que les délinquants soient punis ?",
+        "axis": "securite",
         "reversed": false
     },
     {
         "id": "q24",
-        "theme": "Énergie",
-        "text": "Faut-il arrêter d'installer des éoliennes et démonter progressivement celles qui fonctionnent déjà ?",
-        "axis": "energie",
-        "reversed": false
+        "theme": "Sécurité",
+        "text": "Faut-il que l'Etat autorise et contrôle la vente de cannabis (shit/beuh) pour tout le monde ?",
+        "axis": "securite",
+        "reversed": true
     },
     {
         "id": "q25",
-        "theme": "Institutions",
-        "text": "Faut-il changer totalement de système politique et réécrire une nouvelle Constitution pour la France ?",
-        "axis": "institutions",
-        "reversed": true
-    },
-    {
-        "id": "q26",
-        "theme": "Institutions",
-        "text": "Faut-il donner le droit de vote dès l'âge de 16 ans ?",
-        "axis": "institutions",
-        "reversed": true
-    },
-    {
-        "id": "q27",
-        "theme": "Institutions",
-        "text": "Faut-il que les députés puissent voter une loi qui va contre une décision du Conseil constitutionnel ?",
-        "axis": "institutions",
+        "theme": "Sécurité",
+        "text": "Faut-il juger les jeunes de 16 ans comme des adultes quand ils commettent des crimes graves ?",
+        "axis": "securite",
         "reversed": false
     },
     {
+        "id": "q26",
+        "theme": "Immigration",
+        "text": "Faut-il qu'un enfant né en France de parents étrangers ne devienne pas automatiquement Français ?",
+        "axis": "immigration",
+        "reversed": false
+    },
+    {
+        "id": "q27",
+        "theme": "Immigration",
+        "text": "Faut-il donner des papiers et un travail à tous les étrangers sans-papiers qui sont déjà sur notre territoire ?",
+        "axis": "immigration",
+        "reversed": true
+    },
+    {
         "id": "q28",
-        "theme": "International",
-        "text": "Faut-il augmenter massivement l'argent donné à l'armée française pour redevenir une grande puissance militaire dans le monde ?",
-        "axis": "international",
+        "theme": "Immigration",
+        "text": "Faut-il réserver les aides d'argent (HLM, allocations) uniquement aux Français et aux Européens ?",
+        "axis": "immigration",
         "reversed": false
     },
     {
         "id": "q29",
+        "theme": "Immigration",
+        "text": "Faut-il donner le droit de voter aux élections de la ville pour les étrangers qui habitent légalement en France ?",
+        "axis": "immigration",
+        "reversed": true
+    },
+    {
+        "id": "q30",
+        "theme": "Immigration",
+        "text": "Faut-il arrêter de payer les soins gratuits pour les étrangers en situation illégale (sauf s'ils vont mourir) ?",
+        "axis": "immigration",
+        "reversed": false
+    },
+    {
+        "id": "q31",
+        "theme": "Services Publics",
+        "text": "Faut-il embaucher beaucoup plus de gens dans les hôpitaux et les écoles pour avoir un service public à moins de 30 minutes de chez soi ?",
+        "axis": "services_publics",
+        "reversed": true
+    },
+    {
+        "id": "q32",
+        "theme": "Services Publics",
+        "text": "Faut-il supprimer la grosse administration de la santé (ARS) pour redonner le pouvoir aux maires et aux départements ?",
+        "axis": "services_publics",
+        "reversed": false
+    },
+    {
+        "id": "q33",
+        "theme": "Services Publics",
+        "text": "Faut-il que l'école soit vraiment 100% gratuite (cantine, stylos, cahiers et bus gratuits pour tous) ?",
+        "axis": "services_publics",
+        "reversed": true
+    },
+    {
+        "id": "q34",
+        "theme": "Services Publics",
+        "text": "Faut-il utiliser l'ordinateur et l'intelligence artificielle partout dans l'administration pour que ce soit plus simple et moins lent ?",
+        "axis": "services_publics",
+        "reversed": false
+    },
+    {
+        "id": "q35",
+        "theme": "Services Publics",
+        "text": "Faut-il forcer les nouveaux médecins à s'installer là où il n'y a plus de docteurs dans les campagnes ?",
+        "axis": "services_publics",
+        "reversed": true
+    },
+    {
+        "id": "q36",
+        "theme": "Énergie",
+        "text": "Faut-il fermer toutes les centrales nucléaires et utiliser uniquement le soleil et le vent ?",
+        "axis": "energie",
+        "reversed": true
+    },
+    {
+        "id": "q37",
+        "theme": "Énergie",
+        "text": "Faut-il au contraire construire beaucoup de nouvelles centrales nucléaires pour fabriquer notre électricité ?",
+        "axis": "energie",
+        "reversed": false
+    },
+    {
+        "id": "q38",
+        "theme": "Énergie",
+        "text": "Faut-il arrêter tout de suite de mettre des éoliennes et démonter celles qu'on a déjà ?",
+        "axis": "energie",
+        "reversed": false
+    },
+    {
+        "id": "q39",
+        "theme": "Énergie",
+        "text": "Faut-il donner gratuitement le début de la consommation d'eau et d'électricité (le minimum pour vivre) à chaque famille ?",
+        "axis": "energie",
+        "reversed": true
+    },
+    {
+        "id": "q40",
+        "theme": "Énergie",
+        "text": "Faut-il arrêter de donner l'argent des français aux entreprises d'éoliennes pour le redonner directement aux gens ?",
+        "axis": "energie",
+        "reversed": false
+    },
+    {
+        "id": "q41",
+        "theme": "Institutions",
+        "text": "Faut-il changer totalement de système politique en France (passer à la 6e République) ?",
+        "axis": "institutions",
+        "reversed": true
+    },
+    {
+        "id": "q42",
+        "theme": "Institutions",
+        "text": "Faut-il permettre aux députés d'avoir le dernier mot même si les juges disent non ?",
+        "axis": "institutions",
+        "reversed": false
+    },
+    {
+        "id": "q43",
+        "theme": "Institutions",
+        "text": "Faut-il donner le droit de voter dès l'âge de 16 ans ?",
+        "axis": "institutions",
+        "reversed": true
+    },
+    {
+        "id": "q44",
+        "theme": "Institutions",
+        "text": "Faut-il permettre aux citoyens de demander eux-mêmes une nouvelle loi par vote (le RIC) ?",
+        "axis": "institutions",
+        "reversed": true
+    },
+    {
+        "id": "q45",
+        "theme": "Institutions",
+        "text": "Faut-il obliger tous les élèves à porter une blouse ou un uniforme à l'école ?",
+        "axis": "institutions",
+        "reversed": false
+    },
+    {
+        "id": "q46",
         "theme": "International",
-        "text": "Faut-il arrêter d'aider financièrement les pays étrangers s'ils refusent de récupérer leurs habitants expulsés de France ?",
+        "text": "Faut-il donner beaucoup plus d'argent à l'armée française pour redevenir très puissants militairement ?",
         "axis": "international",
         "reversed": false
     },
     {
-        "id": "q30",
+        "id": "q47",
         "theme": "International",
-        "text": "Faut-il créer une commission pour décider si la France doit payer des réparations à cause de l'esclavage ou de la colonisation ?",
+        "text": "Faut-il que la France donne de l'argent pour réparer les erreurs du passé (esclavage et colonies) ?",
         "axis": "international",
         "reversed": true
+    },
+    {
+        "id": "q48",
+        "theme": "International",
+        "text": "Faut-il arrêter d'aider les pays étrangers s'ils ne reprennent pas leurs habitants expulsés de France ?",
+        "axis": "international",
+        "reversed": false
+    },
+    {
+        "id": "q49",
+        "theme": "International",
+        "text": "Faut-il interdire à la France de vendre des armes aux pays qui ne respectent pas les droits de l'homme ?",
+        "axis": "international",
+        "reversed": true
+    },
+    {
+        "id": "q50",
+        "theme": "International",
+        "text": "Faut-il que la France arrête officiellement de s'excuser pour ce qu'elle a fait pendant la colonisation ?",
+        "axis": "international",
+        "reversed": false
     }
 ]

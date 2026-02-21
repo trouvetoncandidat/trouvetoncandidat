@@ -99,3 +99,52 @@
     /* For this project, let's stick to a clean white look regardless of system for the "National" feel unless specified */
   }
 }
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 145, 0.05);
+}
+
+.collectible-card {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.collectible-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 145, 0.2), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
+}
+
+.neon-glow-primary {
+  box-shadow: 0 0 20px rgba(0, 0, 145, 0.15), inset 0 0 10px rgba(0, 0, 145, 0.05);
+}
+
+.neon-glow-secondary {
+  box-shadow: 0 0 20px rgba(225, 0, 15, 0.15), inset 0 0 10px rgba(225, 0, 15, 0.05);
+}
+
+.glow-text-primary {
+  text-shadow: 0 0 8px rgba(0, 0, 145, 0.3);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

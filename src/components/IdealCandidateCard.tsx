@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { IdealMeasure } from '@/lib/matchAlgorithm';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 
 interface IdealCandidateCardProps {
     measures: IdealMeasure[];
@@ -12,7 +12,6 @@ interface IdealCandidateCardProps {
 export default function IdealCandidateCard({ measures }: IdealCandidateCardProps) {
     if (measures.length === 0) return null;
 
-    // AXIS LABELS mapping for better display
     const AXIS_LABELS: Record<string, string> = {
         economie: 'Économie',
         social: 'Social',
@@ -28,39 +27,48 @@ export default function IdealCandidateCard({ measures }: IdealCandidateCardProps
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="group relative w-full overflow-hidden bg-white border-2 border-primary/20 rounded-[2rem] p-8 shadow-sm"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full"
         >
-            <div className="space-y-8">
-                <div className="flex flex-col gap-4 text-center">
-                    <div className="inline-flex items-center gap-2 justify-center">
-                        <Sparkles size={16} className="text-secondary" />
-                        <h2 className="text-3xl font-black tracking-tighter">Votre Mix Idéal</h2>
+            <div className="collectible-card glass-morphism rounded-[2rem] p-6 md:p-10 border-2 border-secondary/10 relative">
+                <div className="flex flex-col gap-6 relative z-10">
+                    <div className="space-y-3 text-center">
+                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full text-[10px] font-black uppercase tracking-widest text-secondary">
+                            <Sparkles size={12} /> Mode Utopie Activé
+                        </span>
+                        <h2 className="text-2xl md:text-4xl font-[1000] tracking-tighter uppercase leading-none text-foreground">
+                            Votre Gouvernement <span className="text-secondary">Idéal</span>
+                        </h2>
+                        <p className="text-foreground/40 font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] max-w-sm mx-auto">
+                            Le meilleur de chaque programme pioché pour vos convictions.
+                        </p>
                     </div>
-                    <p className="text-foreground/40 font-bold text-xs uppercase tracking-widest max-w-xs mx-auto">
-                        Le parti qui défend le mieux vos convictions sur chaque axe thématique.
-                    </p>
-                </div>
 
-                <div className="grid grid-cols-1 gap-3">
-                    {measures.map((measure, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-4 bg-accent/50 rounded-2xl border border-border/50 group-hover:border-primary/10 transition-colors">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
-                                {AXIS_LABELS[measure.axis] || measure.axis.replace('_', ' ')}
-                            </span>
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm font-black text-foreground">{measure.sourceParty}</span>
-                                <ArrowRight size={14} className="text-primary/20" />
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                        {measures.map((measure, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.05 }}
+                                className="flex items-center justify-between p-4 bg-white/40 rounded-2xl border border-white/60 shadow-sm transition-all group"
+                            >
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] font-black uppercase tracking-widest text-foreground/30 leading-none mb-1">
+                                        {AXIS_LABELS[measure.axis] || measure.axis.replace('_', ' ')}
+                                    </span>
+                                    <span className="text-[13px] font-[900] text-foreground tracking-tight">
+                                        {measure.sourceParty}
+                                    </span>
+                                </div>
+                                <div className="w-8 h-8 rounded-full bg-secondary/5 flex items-center justify-center text-secondary/40 transition-colors">
+                                    <ArrowRight size={14} />
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
 
-                <div className="pt-4 border-t border-border/50">
-                    <p className="text-[10px] text-center font-bold text-foreground/30 uppercase tracking-widest leading-relaxed">
-                        Ce programme est une recomposition mathématique <br /> basée sur vos intensités de convictions.
-                    </p>
                 </div>
             </div>
         </motion.div>

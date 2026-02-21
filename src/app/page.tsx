@@ -2,38 +2,17 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, ShieldCheck, Zap, Scale, Ban, MonitorOff, Github, Heart, Coffee } from 'lucide-react';
+import { Sparkles, Scale, Ban, MonitorOff, Github } from 'lucide-react';
+import TopBanner from '@/components/TopBanner';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#FDFDFD] flex flex-col items-center overflow-x-hidden w-full">
-      <div className="fixed top-0 left-0 w-full z-50">
-        {/* Top Banner Tricolore (République) */}
-        <div className="w-full h-2 flex">
-          <div className="flex-1 bg-[#000091]" />
-          <div className="flex-1 bg-white" />
-          <div className="flex-1 bg-[#E1000F]" />
-        </div>
-
-        {/* Support Banner Citoyen */}
-        <div className="w-full bg-[#5F7FFF] py-2 px-4 flex justify-center items-center gap-4 text-white text-[10px] md:text-xs font-bold shadow-md">
-          <div className="flex items-center gap-2">
-            <Heart size={14} className="fill-white" />
-            <span className="hidden xs:inline">Ce projet est 100% citoyen & indépendant.</span>
-            <span className="xs:hidden">Indépendant & Citoyen</span>
-          </div>
-          <a
-            href="https://buymeacoffee.com/trouvetoncandidat"
-            target="_blank"
-            className="bg-white text-[#5F7FFF] px-3 py-1 rounded-full hover:bg-white/90 transition-colors uppercase tracking-widest text-[9px] flex-shrink-0"
-          >
-            Soutenir ☕
-          </a>
-        </div>
-      </div>
+      <TopBanner />
 
       {/* Spacer to push content below fixed header */}
-      <div className="h-16 md:h-12" />
+      <div className="h-24 md:h-28" />
 
       <header className="w-full max-w-5xl px-6 py-6 md:py-12 flex flex-col items-center text-center space-y-6 md:space-y-8 relative">
         <motion.div
@@ -89,7 +68,7 @@ export default function Home() {
           <div className="flex items-center gap-6 text-[9px] font-bold text-foreground/30 uppercase tracking-[0.1em]">
             <span>Gratuit • Anonyme • Sans Pub</span>
             <Link href="https://github.com/trouvetoncandidat/trouvetoncandidat" target="_blank" className="hover:text-foreground transition-colors flex items-center gap-1">
-              <Github size={12} /> Source
+              <Github size={12} /> Open Source
             </Link>
           </div>
         </div>
@@ -115,25 +94,20 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="w-full py-8 mt-auto flex flex-col items-center gap-4 border-t border-border/50">
-        <Link href="/mentions-legales" className="text-[9px] font-black uppercase text-foreground/40 tracking-[0.2em] hover:text-primary transition-colors">
-          Mentions Légales
-        </Link>
-        <p className="text-[9px] font-bold text-foreground/20 uppercase tracking-[0.1em]">
-          🇫🇷 Fait par des citoyens pour la République
-        </p>
-      </footer>
+      <Footer />
     </main>
   );
 }
 
 function ValueCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <div className="flex items-center md:flex-col md:text-center gap-3 md:gap-2 px-4 py-2 md:py-3 transition-colors group">
-      <div className="p-2 bg-white rounded-xl border border-border group-hover:border-primary transition-colors">{icon}</div>
-      <div className="flex flex-col md:items-center">
-        <h3 className="text-[11px] md:text-sm font-black uppercase tracking-tight">{title}</h3>
-        <p className="text-foreground/50 font-medium text-[10px] md:text-xs leading-none">{description}</p>
+    <div className="flex items-center md:flex-col md:text-center gap-4 px-4 py-2 md:py-3 transition-colors group">
+      <div className="p-2.5 bg-white rounded-xl border border-border group-hover:border-primary transition-colors shrink-0">{icon}</div>
+      <div className="flex flex-row items-baseline gap-2 md:flex-col md:items-center min-w-0">
+        <h3 className="text-[12px] md:text-sm font-black uppercase tracking-tight whitespace-nowrap">{title}</h3>
+        <p className="text-foreground/50 font-medium text-[10px] md:text-xs leading-tight before:content-['•'] before:mr-2 before:opacity-30 flex items-center whitespace-nowrap">
+          {description}
+        </p>
       </div>
     </div>
   );

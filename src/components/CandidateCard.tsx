@@ -3,57 +3,121 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MatchResult } from '@/lib/matchAlgorithm';
+import { Trophy, Target, ShieldCheck } from 'lucide-react';
 
 interface CandidateCardProps {
     result: MatchResult;
     rank: number;
 }
 
+const AXIS_LABELS: Record<string, string> = {
+    economie: 'Économie',
+    social: 'Social',
+    ecologie: 'Écologie',
+    europe: 'Europe',
+    securite: 'Sécurité',
+    immigration: 'Immigration',
+    services_publics: 'Services Publics',
+    energie: 'Énergie',
+    institutions: 'Institutions',
+    international: 'International',
+};
+
 export default function CandidateCard({ result, rank }: CandidateCardProps) {
     const { candidate, globalMatch } = result;
 
     const getMatchColor = (score: number) => {
-        if (score >= 80) return 'text-primary';
-        if (score >= 50) return 'text-amber-600';
-        return 'text-secondary';
+        if (score >= 65) return 'text-primary';
+        if (score <= 35) return 'text-secondary';
+        return 'text-amber-600';
+    };
+
+    const getMatchBg = (score: number) => {
+        if (score >= 65) return 'bg-primary/5';
+        if (score <= 35) return 'bg-secondary/5';
+        return 'bg-amber-50';
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: rank * 0.1 }}
-            className={`relative w-full overflow-hidden bg-white border-2 rounded-[2.5rem] shadow-sm ${rank === 1 ? 'border-primary' : 'border-border'
-                }`}
+            initial={{ opacity: 0, x: rank % 2 === 0 ? 30 : -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="w-full"
         >
-            <div className="p-6 md:p-8">
-                <div className="flex items-center justify-between gap-6 mb-6">
-                    <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 flex items-center justify-center text-xl font-black rounded-2xl ${rank === 1 ? 'bg-primary text-white' : 'bg-gray-100 text-foreground/40'
-                            }`}>
-                            {rank}
+            <div className="collectible-card glass-morphism rounded-[2rem] p-6 md:p-10 border-2 border-primary/10 overflow-hidden relative h-full">
+                <div className="relative z-10">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+                        <div className="flex items-center gap-6 text-center md:text-left">
+                            <div className={`w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-[1000] rounded-[1.2rem] shrink-0 shadow-lg ${rank === 1 ? 'bg-primary text-white neon-glow-primary' : 'bg-white text-foreground/20 border border-border'}`}>
+                                {rank}
+                            </div>
+                            <div className="space-y-1 text-left">
+                                <h3 className="text-2xl md:text-3xl font-[1000] tracking-tighter leading-none text-foreground uppercase">{candidate.name}</h3>
+                                <div className="flex items-center gap-2 justify-center md:justify-start">
+                                    <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">{candidate.party}</span>
+                                    <div className="w-1 h-1 bg-border rounded-full" />
+                                    <span className="text-foreground/30 font-bold text-[10px] md:text-xs uppercase tracking-widest">Candidat Officiel</span>
+                                </div>
+                                {candidate.description && (
+                                    <p className="mt-3 text-[11px] md:text-xs font-medium text-foreground/50 italic leading-relaxed max-w-md">
+                                        &quot;{candidate.description}&quot;
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="text-2xl font-black tracking-tight leading-none">{candidate.name}</h3>
-                            <p className="text-primary font-bold text-xs uppercase tracking-wider mt-1">{candidate.party}</p>
+
+                        <div className="flex flex-col items-center md:items-end">
+                            <div className={`text-5xl md:text-7xl font-[1000] tracking-tighter leading-none ${getMatchColor(globalMatch)} glow-text-primary`}>
+                                {globalMatch}%
+                            </div>
+                            <div className="mt-2 px-3 py-1 bg-primary/5 rounded-full">
+                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/60">Affinité Totale</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="text-right">
-                        <div className={`text-4xl font-black ${getMatchColor(globalMatch)}`}>
-                            {globalMatch}%
+                    {/* Thematic Pillars - With Progress Bars for "Game" Feel */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-[1px] flex-1 bg-black/5" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/20">Analyse Thématique</span>
+                            <div className="h-[1px] flex-1 bg-black/5" />
                         </div>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-foreground/30">Match</p>
+
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            {Object.entries(AXIS_LABELS).map(([key, label]) => {
+                                const axisKey = key as keyof typeof result.axisMatches;
+                                const axisMatch = result.axisMatches[axisKey] || 0;
+                                return (
+                                    <div key={key} className={`rounded-2xl p-4 border border-white/60 transition-all ${getMatchBg(axisMatch)}`}>
+                                        <div className="space-y-3">
+                                            <span className="text-[8px] font-black uppercase tracking-widest text-foreground/40 leading-none h-4 flex items-center justify-center text-center">
+                                                {label}
+                                            </span>
+                                            <div className="relative h-1 w-full bg-black/10 rounded-full overflow-hidden">
+                                                <motion.div
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${axisMatch}%` }}
+                                                    transition={{ duration: 1, ease: "easeOut" }}
+                                                    className={`absolute top-0 left-0 h-full rounded-full ${axisMatch >= 65 ? 'bg-primary' :
+                                                        axisMatch <= 35 ? 'bg-secondary' :
+                                                            'bg-amber-500'
+                                                        }`}
+                                                />
+                                            </div>
+                                            <div className={`text-base font-[1000] tracking-tighter text-center ${getMatchColor(axisMatch)}`}>
+                                                {axisMatch}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
 
-                {candidate.description && (
-                    <div className="p-5 bg-accent/50 rounded-2xl border border-border/50">
-                        <p className="text-xs font-medium text-foreground/60 italic leading-relaxed">
-                            {candidate.description}
-                        </p>
-                    </div>
-                )}
+                {/* Bottom Highlight Line */}
+                <div className={`h-1.5 w-full absolute bottom-0 left-0 opacity-20 ${rank === 1 ? 'bg-primary' : 'bg-foreground/10'}`} />
             </div>
         </motion.div>
     );
