@@ -26,17 +26,33 @@ export const AXIS_EXTREMES: Record<PoliticalAxis, { left: string; right: string 
     international: { left: "Multilatéralisme", right: "Indépendance" },
 };
 
+export interface CandidateMatrixEntry {
+    score: number; // Position on the axis (-1 to 1)
+    justification: string;
+}
+
+export interface MatrixQuestion {
+    id: string;
+    text: string;
+    theme: string;
+    axis: PoliticalAxis;
+    reversed: boolean;
+    candidates: Record<string, CandidateMatrixEntry>;
+}
+
+export interface MasterMatrix {
+    metadata: {
+        version: string;
+        lastUpdate: string;
+        description: string;
+    };
+    candidates: Candidate[]; // Nouveau : Métadonnées complètes des candidats
+    matrix: MatrixQuestion[];
+}
+
 export interface WeightedScore {
     score: number;
     weight: number;
-}
-
-export interface Proposition {
-    content: string;
-    axis: PoliticalAxis;
-    score: number; // -1 to +1
-    justification: string;
-    source: string; // e.g. "Page 12"
 }
 
 export interface Candidate {
@@ -49,10 +65,3 @@ export interface Candidate {
     website?: string;
 }
 
-export interface Question {
-    id: string;
-    theme: string;
-    text: string;
-    axis: PoliticalAxis;
-    reversed: boolean;
-}

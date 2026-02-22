@@ -1,9 +1,71 @@
-import { Candidate, PoliticalAxis, WeightedScore } from './constants';
+import { Candidate, PoliticalAxis, WeightedScore, MasterMatrix } from './constants';
 
 export interface MatchResult {
     candidate: Candidate;
     globalMatch: number; // 0 to 100
     axisMatches: Record<PoliticalAxis, number>; // 0 to 100 per axis
+}
+
+/**
+ * NOUVEAU : Référentiel de Vérité (Atomic Match)
+ * Calcule l'affinité question par question en utilisant la Master Matrix.
+ */
+export function calculateAffinity(
+    userAnswers: Record<string, number>,
+    masterMatrix: MasterMatrix,
+    candidates: Candidate[]
+): MatchResult[] {
+    const results = candidates.map(candidate => {
+        let totalAffinity = 0;
+        let totalWeight = 0;
+        const axisMatches: Record<string, number> = {};
+        const axisTotals: Record<string, { sum: number; count: number; weight: number }> = {};
+
+        masterMatrix.matrix.forEach(q => {
+            const userChoice = userAnswers[q.id];
+            if (userChoice === undefined) return;
+
+            const candidateEntry = q.candidates[candidate.id];
+            if (!candidateEntry) return;
+
+            // Poids basé sur l'intensité du choix de l'utilisateur (0.5 pour Neutre, 2 pour D'accord/Contre)
+            let weight = 0.5;
+            const absVal = Math.abs(userChoice);
+            if (absVal === 1) weight = 2;
+            else if (absVal === 0.5) weight = 1;
+
+            // Conversion du score axe du candidat en équivalent "choix"
+            const candidateChoice = q.reversed ? -candidateEntry.score : candidateEntry.score;
+
+            // Calcul de l'affinité atomique
+            const distance = Math.abs(userChoice - candidateChoice);
+            const affinity = 1 - (distance / 2);
+
+            totalAffinity += (affinity * weight);
+            totalWeight += weight;
+
+            // Agrégation par axe
+            if (!axisTotals[q.axis]) axisTotals[q.axis] = { sum: 0, count: 0, weight: 0 };
+            axisTotals[q.axis].sum += (affinity * weight);
+            axisTotals[q.axis].weight += weight;
+            axisTotals[q.axis].count++;
+        });
+
+        // Calcul des scores par axe
+        Object.entries(axisTotals).forEach(([axis, data]) => {
+            axisMatches[axis] = data.weight > 0
+                ? Math.round((data.sum / data.weight) * 100)
+                : 50;
+        });
+
+        return {
+            candidate,
+            globalMatch: totalWeight > 0 ? Math.round((totalAffinity / totalWeight) * 100) : 0,
+            axisMatches: axisMatches as Record<PoliticalAxis, number>
+        };
+    });
+
+    return results.sort((a, b) => b.globalMatch - a.globalMatch);
 }
 
 /**
@@ -66,45 +128,50 @@ export interface IdealMeasure {
 }
 
 /**
- * Génère un programme fictif "Idéal" en piochant les mesures les plus proches
- * du positionnement de l'utilisateur chez les vrais candidats.
+ * Génère un programme fictif "Idéal" (Utopie)
+ * En piochant les mesures les plus proches des choix de l'utilisateur dans la Matrix.
  */
 export function generateIdealCandidate(
-    userScores: Record<PoliticalAxis, WeightedScore>,
+    userAnswers: Record<string, number>,
+    masterMatrix: MasterMatrix,
     candidates: Candidate[]
 ): IdealMeasure[] {
     const idealProgram: IdealMeasure[] = [];
+    // On veut une seule mesure "phare" par axe politique
+    const bestMeasuresPerAxis: Record<string, { affinity: number; measure: IdealMeasure }> = {};
 
-    for (const [axis, weightedUserScore] of Object.entries(userScores)) {
-        const polAxis = axis as PoliticalAxis;
-        const { score: userScore } = weightedUserScore;
+    masterMatrix.matrix.forEach(q => {
+        const userChoice = userAnswers[q.id];
+        if (userChoice === undefined) return;
 
-        let bestMeasure: IdealMeasure | null = null;
-        let minDiff = Infinity;
+        candidates.forEach(candidate => {
+            const entry = q.candidates[candidate.id];
+            if (!entry || !entry.justification) return;
 
-        for (const candidate of candidates) {
-            const candidateScore = candidate.scores[polAxis] ?? 0;
-            const diff = Math.abs(userScore - candidateScore);
+            const candidateChoice = q.reversed ? -entry.score : entry.score;
+            const distance = Math.abs(userChoice - candidateChoice);
+            const affinity = 1 - (distance / 2);
 
-            if (diff < minDiff) {
-                minDiff = diff;
-                const justification = candidate.justifications[polAxis];
-                if (justification) {
-                    bestMeasure = {
-                        axis: polAxis,
-                        content: justification,
+            // Si c'est le meilleur match pour cet axe jusqu'à présent
+            if (!bestMeasuresPerAxis[q.axis] || affinity > bestMeasuresPerAxis[q.axis].affinity) {
+                bestMeasuresPerAxis[q.axis] = {
+                    affinity,
+                    measure: {
+                        axis: q.axis,
+                        content: entry.justification,
                         sourceCandidate: candidate.name,
                         sourceParty: candidate.party,
-                        score: candidateScore
-                    };
-                }
+                        score: entry.score
+                    }
+                };
             }
-        }
+        });
+    });
 
-        if (bestMeasure) {
-            idealProgram.push(bestMeasure);
-        }
-    }
+    // Transformer la map en tableau ordonné
+    Object.values(bestMeasuresPerAxis).forEach(val => {
+        idealProgram.push(val.measure);
+    });
 
     return idealProgram;
 }
@@ -155,13 +222,13 @@ export type PoliticalZone = {
 };
 
 export const POLITICAL_ZONES: PoliticalZone[] = [
-    { id: 1, label: "Extrême Gauche", range: [-1.0, -0.71], color: "#b91c1c" },
-    { id: 2, label: "Gauche", range: [-0.71, -0.43], color: "#e1000f" },
-    { id: 3, label: "Centre-Gauche", range: [-0.43, -0.14], color: "#f87171" },
-    { id: 4, label: "Centre", range: [-0.14, 0.14], color: "#94a3b8" },
-    { id: 5, label: "Centre-Droit", range: [0.14, 0.43], color: "#60a5fa" },
-    { id: 6, label: "Droite", range: [0.43, 0.71], color: "#000091" },
-    { id: 7, label: "Extrême Droite", range: [0.71, 1.0], color: "#1e1b4b" },
+    { id: 1, label: "Gauche Radicale", range: [-1.0, -0.85], color: "#b91c1c" },
+    { id: 2, label: "Gauche", range: [-0.85, -0.6], color: "#e1000f" },
+    { id: 3, label: "Centre-Gauche", range: [-0.6, -0.15], color: "#f87171" },
+    { id: 4, label: "Centre", range: [-0.15, 0.15], color: "#94a3b8" },
+    { id: 5, label: "Centre-Droit", range: [0.15, 0.6], color: "#60a5fa" },
+    { id: 6, label: "Droite", range: [0.6, 0.85], color: "#000091" },
+    { id: 7, label: "Droite Nationale", range: [0.85, 1.0], color: "#1e1b4b" },
 ];
 
 export function getSegmentationZone(score: number): PoliticalZone {

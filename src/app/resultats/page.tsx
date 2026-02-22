@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { calculateMatches, generateIdealCandidate, MatchResult, IdealMeasure, getPoliticalProfile, getSegmentationZone, POLITICAL_ZONES } from '@/lib/matchAlgorithm';
+import { calculateMatches, calculateAffinity, generateIdealCandidate, MatchResult, IdealMeasure, getPoliticalProfile, getSegmentationZone, POLITICAL_ZONES } from '@/lib/matchAlgorithm';
 import { PoliticalAxis, WeightedScore, AXIS_EXTREMES } from '@/lib/constants';
 import CandidateCard from '@/components/CandidateCard';
 import IdealCandidateCard from '@/components/IdealCandidateCard';
@@ -22,6 +22,7 @@ export default function ResultsPage() {
     const [exportingType, setExportingType] = useState<'IDENTITY' | 'MATCH' | 'RADAR' | 'IDEAL' | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [userScores, setUserScores] = useState<Record<string, WeightedScore>>({});
+    const [isNeutralProfile, setIsNeutralProfile] = useState(false);
 
     const refIdentity = useRef<HTMLDivElement>(null);
     const refMatch = useRef<HTMLDivElement>(null);
@@ -65,13 +66,25 @@ export default function ResultsPage() {
                 });
                 setUserScores(uScores);
 
-                const response = await fetch('/candidates.json');
-                const candidates = await response.json();
+                const responseMatrix = await fetch('/master_matrix.json');
+                const masterMatrix = await responseMatrix.json();
+                const candidates = masterMatrix.candidates;
 
-                const matches = calculateMatches(uScores as Record<PoliticalAxis, WeightedScore>, candidates);
+                const rawAnswers = sessionStorage.getItem('userAnswers');
+                const uAnswers = rawAnswers ? JSON.parse(rawAnswers) : {};
+
+                // Check for neutral profile (> 50% neutral answers)
+                const totalQuestions = masterMatrix.matrix.length;
+                const neutralCount = Object.values(uAnswers).filter(val => val === 0).length;
+                if (neutralCount > totalQuestions / 2) {
+                    setIsNeutralProfile(true);
+                }
+
+                // Nouveau moteur basé sur la Master Matrix
+                const matches = calculateAffinity(uAnswers, masterMatrix, candidates);
                 setResults(matches);
 
-                const ideal = generateIdealCandidate(uScores as Record<PoliticalAxis, WeightedScore>, candidates);
+                const ideal = generateIdealCandidate(uAnswers, masterMatrix, candidates);
                 setIdealMeasures(ideal);
 
                 const badge = getPoliticalProfile(uScores as Record<PoliticalAxis, WeightedScore>);
@@ -205,6 +218,17 @@ export default function ResultsPage() {
                                                     {profileBadge.subtitle}
                                                 </h1>
 
+                                                {isNeutralProfile && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="mt-2 text-[10px] font-bold text-primary/60 uppercase tracking-widest flex items-center justify-center gap-2"
+                                                    >
+                                                        <Info size={12} />
+                                                        <span>Votre profil est en construction, vous semblez privilégier la nuance.</span>
+                                                    </motion.div>
+                                                )}
+
                                                 {(() => {
                                                     const scoresList = Object.values(userScores);
                                                     const weightedSum = scoresList.reduce((acc, s) => acc + (s.score * s.weight), 0);
@@ -250,7 +274,7 @@ export default function ResultsPage() {
                                                                     const x2 = 50 + 44 * Math.cos(radian);
                                                                     const y2 = 45 + 44 * Math.sin(radian);
                                                                     return (
-                                                                        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="1.5" className="opacity-80" />
+                                                                        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="0.5" className="opacity-80" />
                                                                     );
                                                                 })}
                                                                 <defs>
@@ -267,20 +291,10 @@ export default function ResultsPage() {
                                                                 {(() => {
                                                                     const scoresList = Object.values(userScores);
 
-                                                                    // Filter out neutral-ish scores to find the "center of gravity" of convictions
-                                                                    const convictionScores = scoresList.filter(s => Math.abs(s.score) > 0.1);
-
-                                                                    let avg = 0;
-                                                                    if (convictionScores.length > 0) {
-                                                                        const weightedSum = convictionScores.reduce((acc, s) => acc + (s.score * s.weight), 0);
-                                                                        const totalWeight = convictionScores.reduce((acc, s) => acc + s.weight, 0);
-                                                                        avg = weightedSum / totalWeight;
-                                                                    } else {
-                                                                        // Fallback to raw average if everything is neutral
-                                                                        const weightedSum = scoresList.reduce((acc, s) => acc + (s.score * s.weight), 0);
-                                                                        const totalWeight = scoresList.reduce((acc, s) => acc + s.weight, 0);
-                                                                        avg = totalWeight > 0 ? weightedSum / totalWeight : 0;
-                                                                    }
+                                                                    // Simple weighted average for smooth cursor movement
+                                                                    const weightedSum = scoresList.reduce((acc, s) => acc + (s.score * s.weight), 0);
+                                                                    const totalWeight = scoresList.reduce((acc, s) => acc + s.weight, 0);
+                                                                    const avg = totalWeight > 0 ? weightedSum / totalWeight : 0;
 
                                                                     // Apply a slight "expressiveness" curve (non-linear) to avoid everything being in the center
                                                                     // but keep it within -1 and 1
@@ -364,8 +378,18 @@ export default function ResultsPage() {
                                         </div>
 
                                         <div className="flex items-center justify-center flex-1 w-full relative min-h-[400px]">
-                                            {/* Radar Core Glow */}
-                                            <div className="absolute w-64 h-64 bg-primary/5 blur-[80px] rounded-full" />
+                                            {/* Radar Core Glow - Dynamic Color */}
+                                            {(() => {
+                                                const scoresList = Object.values(userScores).map(s => s.score);
+                                                const avg = scoresList.reduce((a, b) => a + b, 0) / (scoresList.length || 1);
+                                                const zone = getSegmentationZone(avg);
+                                                return (
+                                                    <div
+                                                        className="absolute w-64 h-64 blur-[100px] rounded-full opacity-20 animate-pulse"
+                                                        style={{ backgroundColor: zone.color }}
+                                                    />
+                                                );
+                                            })()}
                                             <div className="w-full max-w-sm aspect-square relative z-20">
                                                 <RadarChart userScores={userScores} />
                                             </div>
@@ -394,6 +418,26 @@ export default function ResultsPage() {
 
                     <Footer />
                 </motion.main>
+            )}
+
+            {/* FLOATING SHARE BUTTON FOR MOBILE accessibility */}
+            {!loading && !showTheatricalLoading && (
+                <div className="fixed bottom-6 right-6 z-[100] md:hidden">
+                    <button
+                        onClick={() => handleShareImage('MATCH')}
+                        className="w-16 h-16 bg-[#000091] text-white rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-all border-4 border-white"
+                    >
+                        {exportingType === 'MATCH' ? (
+                            <RefreshCw size={24} className="animate-spin" />
+                        ) : (
+                            <div className="flex flex-col items-center gap-0.5">
+                                <Share2 size={20} />
+                                <span className="text-[8px] font-black uppercase tracking-[0.1em]">Share</span>
+                            </div>
+                        )}
+                    </button>
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#E1000F] rounded-full border-2 border-white animate-pulse" />
+                </div>
             )}
         </AnimatePresence>
     );

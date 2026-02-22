@@ -79,7 +79,7 @@ export default function RadarChart({ userScores, isExport = false }: RadarChartP
                 pointBorderColor: '#fff',
                 pointRadius: isExport ? 6 : 4,
                 fill: true,
-                tension: 0.2, // Smoother shape
+                tension: 0.15, // Smooth but not too loose
             }
         ],
     };
@@ -104,12 +104,12 @@ export default function RadarChart({ userScores, isExport = false }: RadarChartP
                 },
                 pointLabels: {
                     font: {
-                        size: isExport ? 28 : (typeof window !== 'undefined' && window.innerWidth < 768 ? 10 : 14),
+                        size: isExport ? 28 : (typeof window !== 'undefined' && window.innerWidth < 768 ? 9 : 11),
                         weight: 'bold',
                         family: 'inherit',
                     },
                     color: '#1D1D1F',
-                    padding: isExport ? 25 : 15,
+                    padding: isExport ? 25 : 10,
                 }
             },
         },

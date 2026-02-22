@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Scale } from 'lucide-react';
 
 export default function TopBanner() {
     return (
@@ -17,7 +18,9 @@ export default function TopBanner() {
             <div className="w-full bg-white/95 backdrop-blur-md py-3 px-4 md:px-8 flex justify-between items-center border-b border-black/5">
                 {/* Logo + Titre */}
                 <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity min-w-0">
-                    <img src="/icon" alt="Logo" className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] rounded-lg shadow-sm" />
+                    <div className="w-[24px] h-[24px] md:w-[28px] md:h-[28px] bg-primary rounded-lg shadow-sm flex items-center justify-center">
+                        <Scale size={16} className="text-white" />
+                    </div>
                     <span className="font-[1000] text-sm md:text-lg uppercase tracking-tighter text-[#1D1D1F] truncate">
                         TrouveTonCandidat.fr
                     </span>
@@ -33,13 +36,13 @@ export default function TopBanner() {
                     >
                         {/* Mobile : Texte court */}
                         <img
-                            src="https://img.buymeacoffee.com/button-api/?text=Nous soutenir&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
+                            src="https://img.buymeacoffee.com/button-api/?text=Nous%20soutenir&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
                             alt="Nous soutenir"
                             className="h-[32px] w-auto md:hidden"
                         />
                         {/* Desktop : Texte complet */}
                         <img
-                            src="https://img.buymeacoffee.com/button-api/?text=Soutenir notre action&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
+                            src="https://img.buymeacoffee.com/button-api/?text=Soutenir%20notre%20action&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
                             alt="Soutenir notre action"
                             className="h-[40px] w-auto hidden md:block"
                         />

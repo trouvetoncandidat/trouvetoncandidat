@@ -23,12 +23,20 @@ export const metadata: Metadata = {
     url: 'https://trouvetoncandidat.fr',
     siteName: 'TrouveTonCandidat.fr',
     locale: 'fr_FR',
-    type: 'website',
+    images: [
+      {
+        url: '/og-preview.png',
+        width: 1200,
+        height: 630,
+        alt: 'TrouveTonCandidat.fr | Le comparateur politique 100% neutre',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: "TrouveTonCandidat.fr | Le comparateur politique neutre",
     description: "Qui défend vraiment vos idées pour 2027 ? Faites le test en 2 minutes.",
+    images: ['/og-preview.png'],
   },
 };
 

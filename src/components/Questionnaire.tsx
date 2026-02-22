@@ -2,11 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PoliticalAxis, Question, WeightedScore } from '@/lib/constants';
+import { PoliticalAxis, MatrixQuestion, MasterMatrix, WeightedScore } from '@/lib/constants';
 import { ChevronLeft, CheckCircle2 } from 'lucide-react';
-import questionsData from '../../data/questions.json';
-
-const ALL_QUESTIONS = questionsData as Question[];
 
 interface QuestionnaireProps {
     onComplete: (scores: Record<PoliticalAxis, WeightedScore>) => void;
@@ -21,30 +18,40 @@ const CHOICE_VALUES = [
 ];
 
 export default function Questionnaire({ onComplete }: QuestionnaireProps) {
+    const [questions, setQuestions] = useState<MatrixQuestion[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState<Record<string, number>>({});
     const [direction, setDirection] = useState(0);
 
-    const q = ALL_QUESTIONS[currentIndex];
-    const progress = ((currentIndex + 1) / ALL_QUESTIONS.length) * 100;
-
-    // Body scroll lock removed to allow Footer to be reached if needed, 
-    // but the component itself is designed as a Flex layout.
     useEffect(() => {
         const originalStyle = window.getComputedStyle(document.body).overflow;
-        // document.body.style.overflow = 'hidden';
-        // document.documentElement.style.overflow = 'hidden';
+
+        // Fetch the Single Source of Truth
+        async function loadMatrix() {
+            const res = await fetch('/master_matrix.json');
+            const data: MasterMatrix = await res.json();
+            setQuestions(data.matrix);
+        }
+        loadMatrix();
+
         return () => {
             document.body.style.overflow = originalStyle;
             document.documentElement.style.overflow = 'auto';
         };
     }, []);
 
+    if (questions.length === 0) {
+        return <div className="p-20 text-center font-black animate-pulse">Initialisation du Référentiel...</div>;
+    }
+
+    const q = questions[currentIndex];
+    const progress = ((currentIndex + 1) / questions.length) * 100;
+
     const handleSelectAnswer = (value: number) => {
         const newAnswers = { ...answers, [q.id]: value };
         setAnswers(newAnswers);
 
-        if (currentIndex < ALL_QUESTIONS.length - 1) {
+        if (currentIndex < questions.length - 1) {
             setDirection(1);
             setTimeout(() => {
                 setCurrentIndex(prev => prev + 1);
@@ -55,7 +62,7 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
             const counts: Record<string, number> = {};
 
             Object.entries(newAnswers).forEach(([qId, val]) => {
-                const questionData = ALL_QUESTIONS.find(item => item.id === qId);
+                const questionData = questions.find((item: MatrixQuestion) => item.id === qId);
                 if (questionData) {
                     const actualValue = questionData.reversed ? -val : val;
                     const axis = questionData.axis;
@@ -80,6 +87,9 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                     }
                 ])
             ) as Record<PoliticalAxis, WeightedScore>;
+
+            // Sauvegarde des réponses brutes pour le Référentiel de Vérité
+            sessionStorage.setItem('userAnswers', JSON.stringify(newAnswers));
 
             onComplete(finalScores);
         }
@@ -109,7 +119,7 @@ export default function Questionnaire({ onComplete }: QuestionnaireProps) {
                             {q.theme}
                         </p>
                         <p className="text-[11px] font-bold text-foreground/30 uppercase tracking-widest">
-                            Question {currentIndex + 1} sur {ALL_QUESTIONS.length}
+                            Question {currentIndex + 1} sur {questions.length}
                         </p>
                     </div>
                     <div className="w-10" />

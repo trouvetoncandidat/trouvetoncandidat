@@ -8,7 +8,7 @@ Ce document contient l'architecture, les textes et les spécifications de design
 **Durée totale :** 6.5 secondes
 **Étapes (Copywriting) :**
 1. 🔵 "Analyse des réponses citoyennes..." (Icône: Database)
-2. 🔵 "Scan des 1200 pages de programmes officiels..." (Icône: Search)
+2. 🔵 "Scan de toutes les pages de programmes officiels..." (Icône: Search)
 3. 🔴 "Calcul des affinités sur les 10 axes..." (Icône: Zap)
 4. 🟢 "Vérification de la neutralité algorithmique..." (Icône: ShieldCheck)
 5. 🟡 "Génération de votre ADN politique..." (Icône: Award)
@@ -46,7 +46,7 @@ Ce document contient l'architecture, les textes et les spécifications de design
 
 ---
 
-## 4. Analyse ADN (RadarChart)
+## 4. Mes convictions (RadarChart)
 *Composant : src/components/RadarChart.tsx*
 
 **Axes (Labels) :**
@@ -58,10 +58,10 @@ Ce document contient l'architecture, les textes et les spécifications de design
 
 ---
 
-## 5. Le Gouvernement Idéal (IdealCandidateCard)
+## 5. Mon candidat idéal (IdealCandidateCard)
 *Composant : src/components/IdealCandidateCard.tsx*
 
-**Titre :** "Votre Gouvernement Idéal"
+**Titre :** "Mon candidat Idéal"
 **Badge :** "Mode Utopie Activé"
 **Contenu :** Liste des mesures les plus proches de vos convictions, piochées chez n'importe quel candidat.
 
