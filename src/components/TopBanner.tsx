@@ -34,18 +34,11 @@ export default function TopBanner() {
                         rel="noopener noreferrer"
                         className="hover:opacity-90 transition-opacity active:scale-95"
                     >
-                        {/* Mobile : Texte court */}
-                        <img
-                            src="https://img.buymeacoffee.com/button-api/?text=Nous%20soutenir&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
-                            alt="Nous soutenir"
-                            className="h-[32px] w-auto md:hidden"
-                        />
-                        {/* Desktop : Texte complet */}
-                        <img
-                            src="https://img.buymeacoffee.com/button-api/?text=Soutenir%20notre%20action&emoji=&slug=trouvetoncandidat&button_colour=000091&font_colour=ffffff&font_family=Lato&outline_colour=ffffff&coffee_colour=FFDD00"
-                            alt="Soutenir notre action"
-                            className="h-[40px] w-auto hidden md:block"
-                        />
+                        <div className="bg-[#000091] text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full font-black text-[10px] md:text-sm uppercase tracking-widest flex items-center gap-2 shadow-sm shadow-blue-900/20 border border-white/10">
+                            <span className="hidden md:inline">Soutenir notre action</span>
+                            <span className="md:hidden">Nous soutenir</span>
+                            <span className="text-amber-400 text-base md:text-lg">☕</span>
+                        </div>
                     </a>
                 </div>
             </div>

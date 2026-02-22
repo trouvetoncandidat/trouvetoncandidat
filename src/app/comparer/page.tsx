@@ -22,10 +22,11 @@ export default function ComparePage() {
     useEffect(() => {
         async function fetchCandidates() {
             try {
-                const res = await fetch('/candidates.json');
+                const res = await fetch('/master_matrix.json');
                 const data = await res.json();
+                const candidatesData = data.candidates || [];
                 // Shuffle data for neutrality
-                const shuffled = [...data].sort(() => Math.random() - 0.5);
+                const shuffled = [...candidatesData].sort(() => Math.random() - 0.5);
                 setCandidates(shuffled);
                 setLoading(false);
             } catch (err) {
