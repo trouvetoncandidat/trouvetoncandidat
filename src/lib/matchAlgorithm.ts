@@ -146,3 +146,25 @@ export function getPoliticalProfile(scores: Record<PoliticalAxis, WeightedScore>
 
     return { title, subtitle };
 }
+
+export type PoliticalZone = {
+    id: number;
+    label: string;
+    range: [number, number];
+    color: string;
+};
+
+export const POLITICAL_ZONES: PoliticalZone[] = [
+    { id: 1, label: "Extrême Gauche", range: [-1.0, -0.71], color: "#b91c1c" },
+    { id: 2, label: "Gauche", range: [-0.71, -0.43], color: "#e1000f" },
+    { id: 3, label: "Centre-Gauche", range: [-0.43, -0.14], color: "#f87171" },
+    { id: 4, label: "Centre", range: [-0.14, 0.14], color: "#94a3b8" },
+    { id: 5, label: "Centre-Droit", range: [0.14, 0.43], color: "#60a5fa" },
+    { id: 6, label: "Droite", range: [0.43, 0.71], color: "#000091" },
+    { id: 7, label: "Extrême Droite", range: [0.71, 1.0], color: "#1e1b4b" },
+];
+
+export function getSegmentationZone(score: number): PoliticalZone {
+    const zone = POLITICAL_ZONES.find(z => score >= z.range[0] && score <= z.range[1]);
+    return zone || POLITICAL_ZONES[3]; // Default to center if not found
+}

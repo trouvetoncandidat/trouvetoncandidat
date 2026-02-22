@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { WeightedScore } from '@/lib/constants';
+import { getSegmentationZone } from '@/lib/matchAlgorithm';
 
 ChartJS.register(
     RadialLinearScale,
@@ -26,7 +27,6 @@ ChartJS.register(
 
 interface RadarChartProps {
     userScores: Record<string, WeightedScore | number>;
-    candidateScores: Record<string, number>;
     isExport?: boolean;
 }
 
@@ -43,28 +43,43 @@ const AXIS_LABELS: Record<string, string> = {
     international: 'International',
 };
 
-export default function RadarChart({ userScores, candidateScores, isExport = false }: RadarChartProps) {
+export default function RadarChart({ userScores, isExport = false }: RadarChartProps) {
     const axes = Object.keys(AXIS_LABELS);
+
+    // Calculate global zone for color
+    const scoresList = Object.values(userScores).map(s => typeof s === 'object' ? s.score : s);
+    const avg = scoresList.reduce((a, b) => a + b, 0) / (scoresList.length || 1);
+    const zone = getSegmentationZone(avg);
+
+    // Convert hex to rgba for transparency
+    const hexToRgba = (hex: string, alpha: number) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    const radarColor = zone.color;
+    const radarBg = hexToRgba(radarColor, 0.3);
 
     const data: ChartData<'radar'> = {
         labels: axes.map(axis => AXIS_LABELS[axis]),
         datasets: [
             {
-                label: 'Votre Profil',
+                label: 'Force de Conviction',
                 data: axes.map(axis => {
                     const val = userScores[axis];
-                    if (typeof val === 'object' && val !== null) {
-                        return val.score;
-                    }
-                    return val || 0;
+                    const score = typeof val === 'object' && val !== null ? val.score : (val || 0);
+                    return Math.abs(score);
                 }),
-                backgroundColor: 'rgba(0, 0, 145, 0.25)',
-                borderColor: '#000091',
+                backgroundColor: radarBg,
+                borderColor: radarColor,
                 borderWidth: isExport ? 6 : 4,
-                pointBackgroundColor: '#000091',
+                pointBackgroundColor: radarColor,
                 pointBorderColor: '#fff',
                 pointRadius: isExport ? 6 : 4,
                 fill: true,
+                tension: 0.2, // Smoother shape
             }
         ],
     };
@@ -81,11 +96,11 @@ export default function RadarChart({ userScores, candidateScores, isExport = fal
                     color: 'rgba(0,0,0,0.08)',
                     lineWidth: isExport ? 2 : 1.5,
                 },
-                suggestedMin: -1,
+                suggestedMin: 0,
                 suggestedMax: 1,
                 ticks: {
                     display: false,
-                    stepSize: 0.5,
+                    stepSize: 0.25,
                 },
                 pointLabels: {
                     font: {
@@ -95,9 +110,6 @@ export default function RadarChart({ userScores, candidateScores, isExport = fal
                     },
                     color: '#1D1D1F',
                     padding: isExport ? 25 : 15,
-                    backdropColor: 'rgba(255,255,255,0.8)',
-                    backdropPadding: 4,
-                    borderRadius: 4,
                 }
             },
         },
@@ -108,17 +120,21 @@ export default function RadarChart({ userScores, candidateScores, isExport = fal
             tooltip: {
                 enabled: true,
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                titleColor: '#000091',
+                titleColor: radarColor,
                 bodyColor: '#1D1D1F',
-                borderColor: '#e2e8f0',
+                borderColor: radarColor,
                 borderWidth: 1,
                 padding: 12,
                 boxPadding: 6,
                 usePointStyle: true,
                 callbacks: {
                     label: (context) => {
-                        const val = context.raw as number;
-                        return `${context.dataset.label}: ${val.toFixed(2)}`;
+                        const axis = axes[context.dataIndex];
+                        const val = userScores[axis];
+                        const score = typeof val === 'object' && val !== null ? val.score : (val || 0);
+                        const intensity = Math.abs(score).toFixed(2);
+                        const direction = score < 0 ? "Gauche" : score > 0 ? "Droite" : "Neutre";
+                        return `Intensité: ${intensity} (Profil: ${direction})`;
                     }
                 }
             }

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MatchResult } from '@/lib/matchAlgorithm';
-import { Trophy, Target, ShieldCheck } from 'lucide-react';
+import { MatchResult, getSegmentationZone } from '@/lib/matchAlgorithm';
+import { Trophy, Target, ShieldCheck, MapPin } from 'lucide-react';
 
 interface CandidateCardProps {
     result: MatchResult;
@@ -56,7 +56,19 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                                 <div className="flex items-center gap-2 justify-center md:justify-start">
                                     <span className="text-primary font-black text-[10px] md:text-xs uppercase tracking-[0.2em]">{candidate.party}</span>
                                     <div className="w-1 h-1 bg-border rounded-full" />
-                                    <span className="text-foreground/30 font-bold text-[10px] md:text-xs uppercase tracking-widest">Candidat Officiel</span>
+                                    {(() => {
+                                        const scores = Object.values(candidate.scores);
+                                        const avg = scores.reduce((a, b) => a + b, 0) / (scores.length || 1);
+                                        const zone = getSegmentationZone(avg);
+                                        return (
+                                            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-black/5 bg-black/[0.02]">
+                                                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: zone.color }} />
+                                                <span className="text-[9px] font-black uppercase tracking-wider opacity-60" style={{ color: zone.color }}>
+                                                    {zone.label}
+                                                </span>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
                                 {candidate.description && (
                                     <p className="mt-3 text-[11px] md:text-xs font-medium text-foreground/50 italic leading-relaxed max-w-md">
@@ -88,6 +100,8 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                             {Object.entries(AXIS_LABELS).map(([key, label]) => {
                                 const axisKey = key as keyof typeof result.axisMatches;
                                 const axisMatch = result.axisMatches[axisKey] || 0;
+                                const candidateScore = candidate.scores[key] || 0;
+                                const axisZone = getSegmentationZone(candidateScore);
                                 return (
                                     <div key={key} className={`rounded-2xl p-4 border border-white/60 transition-all ${getMatchBg(axisMatch)}`}>
                                         <div className="space-y-3">
@@ -105,8 +119,13 @@ export default function CandidateCard({ result, rank }: CandidateCardProps) {
                                                         }`}
                                                 />
                                             </div>
-                                            <div className={`text-base font-[1000] tracking-tighter text-center ${getMatchColor(axisMatch)}`}>
-                                                {axisMatch}%
+                                            <div className="flex items-center justify-between">
+                                                <div className={`text-base font-[1000] tracking-tighter ${getMatchColor(axisMatch)}`}>
+                                                    {axisMatch}%
+                                                </div>
+                                                <div className="text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm text-white uppercase" style={{ backgroundColor: axisZone.color }}>
+                                                    {axisZone.label.split(' ').map(w => w[0]).join('')}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -42,8 +42,8 @@ export default function StoryExportCard({
     const themes = {
         IDENTITY: { bg: 'bg-[#000091]', title: 'Mon Profil', icon: <Award size={100} /> },
         MATCH: { bg: 'bg-[#000091]', title: 'Mon Match', icon: <Target size={100} /> },
-        RADAR: { bg: 'bg-[#1D1D1F]', title: 'Mon ADN', icon: <Dna size={100} /> },
-        IDEAL: { bg: 'bg-[#E1000F]', title: 'Mon Gouvernement', icon: <Sparkles size={100} /> },
+        RADAR: { bg: 'bg-[#1D1D1F]', title: 'Mes Convictions', icon: <Dna size={100} /> },
+        IDEAL: { bg: 'bg-[#1D1D1F]', title: 'Mon Candidat', icon: <Sparkles size={100} /> },
         DUEL: { bg: 'bg-[#000091]', title: 'Le Duel', icon: <Database size={100} /> },
     };
 
@@ -118,19 +118,17 @@ export default function StoryExportCard({
 
                 {type === 'RADAR' && (
                     <div className="w-full space-y-24 px-10">
-                        <h1 className="text-center text-[180px] font-[1000] leading-none tracking-tighter">Mon ADN</h1>
+                        <h1 className="text-center text-[180px] font-[1000] leading-none tracking-tighter">Mes Convictions</h1>
                         <div className="bg-white/10 backdrop-blur-3xl rounded-[150px] p-24 border border-white/20 shadow-2xl h-[1100px] flex flex-col justify-between">
                             <div className="flex-1 opacity-90 scale-110 translate-y-10">
-                                <RadarChart userScores={userScores} candidateScores={candidateScores} isExport={true} />
+                                <RadarChart userScores={userScores} isExport={true} />
                             </div>
                             <div className="bg-white/5 p-12 rounded-full border border-white/10 mt-10">
                                 <div className="flex justify-center items-center gap-16">
                                     <div className="flex items-center gap-8">
                                         <div className="w-20 h-20 bg-white rounded-full shadow-2xl" />
-                                        <span className="text-[50px] font-black uppercase tracking-widest text-white">MOI</span>
+                                        <span className="text-[50px] font-black uppercase tracking-widest text-white">MON PROFIL POLITIQUE</span>
                                     </div>
-                                    <div className="w-3 h-3 bg-white/20 rounded-full" />
-                                    <span className="text-[50px] font-black uppercase tracking-widest text-white/40 leading-none">{topMatchName}</span>
                                 </div>
                             </div>
                         </div>
@@ -139,20 +137,17 @@ export default function StoryExportCard({
 
                 {type === 'IDEAL' && (
                     <div className="w-full space-y-20 px-10">
-                        <h1 className="text-center text-[160px] font-[1000] leading-none tracking-tighter px-10">Mon Choix Idéal</h1>
+                        <h1 className="text-center text-[160px] font-[1000] leading-none tracking-tighter px-10">Mon Candidat Idéal</h1>
                         <div className="w-full space-y-8">
                             {measures.slice(0, 7).map((m, i) => (
-                                <div key={i} className="bg-white p-14 rounded-[70px] flex items-center justify-between shadow-2xl border-b-[15px] border-black/10">
-                                    <div className="flex flex-col gap-4">
-                                        <div className="bg-[#E1000F]/10 self-start px-8 py-3 rounded-full">
-                                            <span className="text-[34px] font-black uppercase tracking-[0.3em] text-[#E1000F]">
+                                <div key={i} className="bg-white p-14 rounded-[70px] flex items-center justify-center shadow-2xl border-b-[15px] border-black/10">
+                                    <div className="flex flex-col gap-4 text-center">
+                                        <div className="bg-[#000091]/10 self-center px-8 py-3 rounded-full">
+                                            <span className="text-[34px] font-black uppercase tracking-[0.3em] text-[#000091]">
                                                 {AXIS_LABELS[m.axis] || m.axis.replace('_', ' ')}
                                             </span>
                                         </div>
                                         <span className="text-[80px] font-[1000] tracking-tighter leading-none text-black">{m.sourceParty}</span>
-                                    </div>
-                                    <div className="w-32 h-32 rounded-full bg-[#E1000F] shadow-2xl flex items-center justify-center">
-                                        <ArrowRight size={80} className="text-white" strokeWidth={3} />
                                     </div>
                                 </div>
                             ))}

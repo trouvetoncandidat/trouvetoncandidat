@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { calculateMatches, generateIdealCandidate, getPoliticalProfile, MatchResult, IdealMeasure } from '@/lib/matchAlgorithm';
+import { calculateMatches, generateIdealCandidate, MatchResult, IdealMeasure, getPoliticalProfile, getSegmentationZone, POLITICAL_ZONES } from '@/lib/matchAlgorithm';
 import { PoliticalAxis, WeightedScore, AXIS_EXTREMES } from '@/lib/constants';
 import CandidateCard from '@/components/CandidateCard';
 import IdealCandidateCard from '@/components/IdealCandidateCard';
 import StoryExportCard from '@/components/StoryExportCard';
 import TopBanner from '@/components/TopBanner';
-import { Share2, RefreshCw, BarChart3, Target, Sparkles, AlertCircle, Database, Zap, Search, Award, ShieldCheck, ChevronRight, Dna } from 'lucide-react';
+import { RefreshCw, Share2, Sparkles, Database, Search, Zap, ShieldCheck, Award, Info, AlertCircle, BarChart3, Target, ChevronRight, Dna } from 'lucide-react';
 import RadarChart from '@/components/RadarChart';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -34,7 +34,7 @@ export default function ResultsPage() {
 
     const theatricalSteps = [
         { icon: <Database size={24} />, text: "Analyse des réponses citoyennes...", color: "text-[#000091]" },
-        { icon: <Search size={24} />, text: "Scan des 1200 pages de programmes officiels...", color: "text-[#000091]" },
+        { icon: <Search size={24} />, text: "Scan de toutes les pages de programmes officiels...", color: "text-[#000091]" },
         { icon: <Zap size={24} />, text: "Calcul des affinités sur les 10 axes...", color: "text-[#E1000F]" },
         { icon: <ShieldCheck size={24} />, text: "Vérification de la neutralité algorithmique...", color: "text-green-600" },
         { icon: <Award size={24} />, text: "Génération de votre ADN politique...", color: "text-[#FFD700]" }
@@ -204,7 +204,123 @@ export default function ResultsPage() {
                                                 <h1 className="text-3xl md:text-5xl font-[1000] tracking-tighter uppercase leading-[0.9] glow-text-primary px-4 max-w-2xl mx-auto">
                                                     {profileBadge.subtitle}
                                                 </h1>
-                                                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/20 to-transparent mx-auto mt-6" />
+
+                                                {(() => {
+                                                    const scoresList = Object.values(userScores);
+                                                    const weightedSum = scoresList.reduce((acc, s) => acc + (s.score * s.weight), 0);
+                                                    const totalWeight = scoresList.reduce((acc, s) => acc + s.weight, 0);
+                                                    const avg = totalWeight > 0 ? weightedSum / totalWeight : 0;
+                                                    const zone = getSegmentationZone(avg);
+
+                                                    return (
+                                                        <div className="mt-4 flex flex-col items-center">
+                                                            <div className={`px-4 py-1.5 rounded-full border border-black/5 shadow-sm inline-flex items-center gap-2 mb-4`} style={{ backgroundColor: `${zone.color}10` }}>
+                                                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
+                                                                <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: zone.color }}>
+                                                                    Zone : {zone.label}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })()}
+
+                                                {/* Political Hemicycle Positioning */}
+                                                <div className="pt-2 w-full max-w-[340px] mx-auto overflow-visible">
+                                                    <div className="flex justify-between items-center mb-1 px-8">
+                                                        <span className="text-[10px] font-black uppercase text-[#E1000F] tracking-widest opacity-40">Gauche</span>
+                                                        <span className="text-[10px] font-black uppercase text-[#000091] tracking-widest opacity-40">Droite</span>
+                                                    </div>
+                                                    <div className="relative h-28 flex items-center justify-center">
+                                                        <div className="w-full h-full scale-[1.25] origin-center translate-y-2">
+                                                            <svg viewBox="0 0 100 55" className="w-full h-full overflow-visible">
+                                                                <path
+                                                                    d="M 10 45 A 40 40 0 0 1 90 45"
+                                                                    fill="none"
+                                                                    stroke="url(#profileGaugeGradient)"
+                                                                    strokeWidth="6"
+                                                                    strokeLinecap="round"
+                                                                    className="opacity-20"
+                                                                />
+                                                                {/* Zone Dividers */}
+                                                                {[1, 2, 3, 4, 5, 6].map((i) => {
+                                                                    const angle = i * (180 / 7);
+                                                                    const radian = (angle + 180) * (Math.PI / 180);
+                                                                    const x1 = 50 + 36 * Math.cos(radian);
+                                                                    const y1 = 45 + 36 * Math.sin(radian);
+                                                                    const x2 = 50 + 44 * Math.cos(radian);
+                                                                    const y2 = 45 + 44 * Math.sin(radian);
+                                                                    return (
+                                                                        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="1.5" className="opacity-80" />
+                                                                    );
+                                                                })}
+                                                                <defs>
+                                                                    <linearGradient id="profileGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                                        <stop offset="0%" stopColor="#b91c1c" />
+                                                                        <stop offset="14%" stopColor="#e1000f" />
+                                                                        <stop offset="28%" stopColor="#f87171" />
+                                                                        <stop offset="50%" stopColor="#cbd5e1" />
+                                                                        <stop offset="71%" stopColor="#60a5fa" />
+                                                                        <stop offset="85%" stopColor="#000091" />
+                                                                        <stop offset="100%" stopColor="#1e1b4b" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                                {(() => {
+                                                                    const scoresList = Object.values(userScores);
+
+                                                                    // Filter out neutral-ish scores to find the "center of gravity" of convictions
+                                                                    const convictionScores = scoresList.filter(s => Math.abs(s.score) > 0.1);
+
+                                                                    let avg = 0;
+                                                                    if (convictionScores.length > 0) {
+                                                                        const weightedSum = convictionScores.reduce((acc, s) => acc + (s.score * s.weight), 0);
+                                                                        const totalWeight = convictionScores.reduce((acc, s) => acc + s.weight, 0);
+                                                                        avg = weightedSum / totalWeight;
+                                                                    } else {
+                                                                        // Fallback to raw average if everything is neutral
+                                                                        const weightedSum = scoresList.reduce((acc, s) => acc + (s.score * s.weight), 0);
+                                                                        const totalWeight = scoresList.reduce((acc, s) => acc + s.weight, 0);
+                                                                        avg = totalWeight > 0 ? weightedSum / totalWeight : 0;
+                                                                    }
+
+                                                                    // Apply a slight "expressiveness" curve (non-linear) to avoid everything being in the center
+                                                                    // but keep it within -1 and 1
+                                                                    const expressiveAvg = Math.sign(avg) * Math.pow(Math.abs(avg), 0.7);
+
+                                                                    const angle = (expressiveAvg + 1) * 90;
+                                                                    const radian = (angle + 180) * (Math.PI / 180);
+                                                                    const x = 50 + 40 * Math.cos(radian);
+                                                                    const y = 45 + 40 * Math.sin(radian);
+
+                                                                    return (
+                                                                        <motion.g
+                                                                            initial={{ opacity: 0, scale: 0 }}
+                                                                            animate={{ opacity: 1, scale: 1 }}
+                                                                            transition={{ delay: 0.8, duration: 0.5 }}
+                                                                        >
+                                                                            {/* Line to the center for orientation */}
+                                                                            <line x1="50" y1="45" x2={x} y2={y} stroke={avg < 0 ? "#E1000F" : "#000091"} strokeWidth="0.5" strokeDasharray="1 1" opacity="0.3" />
+
+                                                                            <circle cx={x} cy={y} r="5" fill={avg < 0 ? "#E1000F" : "#000091"} className="filter drop-shadow-md" />
+                                                                            <circle cx={x} cy={y} r="8" fill={avg < 0 ? "#E1000F" : "#000091"} className="opacity-20 animate-pulse" />
+
+                                                                            {/* Label for the dot */}
+                                                                            <text
+                                                                                x={x}
+                                                                                y={y + 12}
+                                                                                textAnchor="middle"
+                                                                                className="text-[6px] font-black uppercase tracking-widest fill-foreground/60"
+                                                                            >
+                                                                                VOUS
+                                                                            </text>
+                                                                        </motion.g>
+                                                                    );
+                                                                })()}
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/20 to-transparent mx-auto mt-2" />
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +359,7 @@ export default function ResultsPage() {
                                                 Analyse Dimensionnelle
                                             </span>
                                             <h3 className="text-2xl md:text-4xl font-[1000] uppercase tracking-tighter glow-text-primary leading-none">
-                                                ADN <span className="text-primary">Individuel</span>
+                                                Mes <span className="text-primary">convictions</span>
                                             </h3>
                                         </div>
 
@@ -251,7 +367,7 @@ export default function ResultsPage() {
                                             {/* Radar Core Glow */}
                                             <div className="absolute w-64 h-64 bg-primary/5 blur-[80px] rounded-full" />
                                             <div className="w-full max-w-sm aspect-square relative z-20">
-                                                <RadarChart userScores={userScores} candidateScores={results[0]?.candidate.scores || {}} />
+                                                <RadarChart userScores={userScores} />
                                             </div>
                                         </div>
                                     </motion.section>
@@ -262,7 +378,7 @@ export default function ResultsPage() {
                             <AnimatePresence>
                                 {staggeredStep >= 4 && (
                                     <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="relative h-full">
-                                        <button onClick={() => handleShareImage('IDEAL')} className="absolute top-6 right-6 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-secondary border border-secondary/10 flex items-center gap-2 group">
+                                        <button onClick={() => handleShareImage('IDEAL')} className="absolute top-6 right-6 z-30 px-3 md:px-5 py-2 bg-white/90 backdrop-blur-md rounded-full transition-all shadow-md active:scale-95 text-primary border border-primary/10 flex items-center gap-2 group">
                                             {exportingType === 'IDEAL' ? <RefreshCw className="animate-spin" size={12} /> : <Share2 className="transition-transform" size={12} />}
                                             <span className="text-[10px] font-[900] uppercase tracking-widest">Partager</span>
                                         </button>
